@@ -14,8 +14,8 @@
 // Good Display ePaper for Arduino: https://forum.arduino.cc/index.php?topic=436411.0
 
 // select the display class (only one), matching the kind of display panel
-#define GxEPD2_DISPLAY_CLASS GxEPD2_BW
-//#define GxEPD2_DISPLAY_CLASS GxEPD2_3C
+//#define GxEPD2_DISPLAY_CLASS GxEPD2_BW
+#define GxEPD2_DISPLAY_CLASS GxEPD2_3C
 //#define GxEPD2_DISPLAY_CLASS GxEPD2_7C
 
 // select the display driver class (only one) for your  panel
@@ -49,7 +49,7 @@
 //#define GxEPD2_DRIVER_CLASS GxEPD2_1160_T91 // GDEH116T91 960x640, SSD1677
 // 3-color e-papers
 //#define GxEPD2_DRIVER_CLASS GxEPD2_154c     // GDEW0154Z04 200x200, IL0376F, no longer available
-//#define GxEPD2_DRIVER_CLASS GxEPD2_154_Z90c // GDEH0154Z90 200x200, SSD1682
+#define GxEPD2_DRIVER_CLASS GxEPD2_154_Z90c // GDEH0154Z90 200x200, SSD1682
 //#define GxEPD2_DRIVER_CLASS GxEPD2_213c     // GDEW0213Z16 104x212, UC8151 (IL0373)
 //#define GxEPD2_DRIVER_CLASS GxEPD2_213_Z19c // GDEW0213Z19 104x212, UC8151D
 //#define GxEPD2_DRIVER_CLASS GxEPD2_290c     // GDEW029Z10  128x296, UC8151 (IL0373)
