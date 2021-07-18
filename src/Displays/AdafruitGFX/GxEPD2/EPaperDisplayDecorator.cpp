@@ -47,10 +47,8 @@ void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setCoolingIndicator(bool isCoo
 template<typename DRIVER, const uint16_t PAGE_HEIGHT>
 void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::draw() {
     if (isRedrawRequired) {
-        Serial.println("Redrawing...");
         driver.firstPage();
         do {
-            Serial.println("Redrawing page...");
             decoratedDisplay.draw();
         } while (driver.nextPage());
     }
