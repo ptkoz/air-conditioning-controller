@@ -5,7 +5,7 @@
 #include "Devices/AirConditioners/DimplexPC35AMB.h"
 #include "Displays/Factory.h"
 
-ACC::Displays::Display & display = ACC::Displays::Factory::createWaveShare3Color200x200Display(10, 8, 9, 7);
+ACC::Displays::Display & mainDisplay = ACC::Displays::Factory::createWaveShare3Color200x200Display(10, 8, 9, 7);
 
 void setup() {
     Serial.begin(9600); //change BAUD rate as required
@@ -14,6 +14,6 @@ void setup() {
 
 void loop() {
     Serial.println(F("Looping..."));
-//    display.draw();
+//    mainDisplay.draw();
     delay(1000);
 }
