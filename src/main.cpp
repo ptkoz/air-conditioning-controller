@@ -13,13 +13,13 @@ ACC::Displays::AdafruitGFX::GxEPD2::EPaperDisplayDecorator<GxEPD2_154_Z90c, 8> m
 ACC::Devices::TemperatureSensors::MCP9808 temperatureSensor(0x18);
 
 void setup() {
-    Serial.begin(9600); //change BAUD rate as required
     driver.init();
     driver.setRotation(1);
 }
 
 void loop() {
+    temperatureSensor.measure();
     mainDisplay.setIndoorTemperature(temperatureSensor.getTemperature());
     mainDisplay.draw();
-    delay(1000);
+    delay(10000);
 }

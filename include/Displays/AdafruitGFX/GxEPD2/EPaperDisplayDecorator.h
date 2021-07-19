@@ -15,6 +15,8 @@ namespace ACC::Displays::AdafruitGFX::GxEPD2 {
             Display & decoratedDisplay;
             GxEPD2_3C<DRIVER, PAGE_HEIGHT> & driver;
             bool isRedrawRequired;
+
+            bool isTemperatureSignificantlyDifferent(double previous, double current);
         public:
             explicit EPaperDisplayDecorator(Display & decoratedDisplay, GxEPD2_3C<DRIVER, PAGE_HEIGHT> & driver);
             void setIndoorTemperature(double temperature) override;

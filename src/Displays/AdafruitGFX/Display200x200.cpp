@@ -12,14 +12,19 @@ Display200x200::Display200x200(Adafruit_GFX &gfx) :
 void Display200x200::draw() {
     char buffer[10];
 
-    temperatureToString(buffer, hasIndoorTemperature, indoorTemperature);
+    formatTemperatureString(buffer, hasIndoorTemperature, indoorTemperature);
     drawTemperature("In", buffer, 5, true);
 
-    temperatureToString(buffer, hasTargetTemperature, targetTemperature);
+    formatTemperatureString(buffer, hasTargetTemperature, targetTemperature);
     drawTemperature("Set", buffer, 70, true);
 
-    temperatureToString(buffer, hasOutdoorTemperature, outdoorTemperature);
+    formatTemperatureString(buffer, hasOutdoorTemperature, outdoorTemperature);
     drawTemperature("Out", buffer, 135, false);
+
+    gfx.setCursor(10, 80);
+    gfx.setFont(&FreeSansBold9pt7b);
+    gfx.print("AC: ");
+    gfx.print(isCoolingEnabled ? "On" : "Off");
 }
 
 void Display200x200::drawTemperature(

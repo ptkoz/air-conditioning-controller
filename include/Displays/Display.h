@@ -21,13 +21,17 @@ namespace ACC::Displays {
 
             bool isCoolingEnabled = false;
 
-            virtual void temperatureToString(char * buffer, bool hasTemperature, double temperature) {
+            static void formatTemperatureString(char buffer[], bool hasTemperature, double temperature) {
                 if (!hasTemperature) {
                     strcpy(buffer, "- C");
                 } else {
-                    dtostrf(temperature, 5, 1, buffer);
+                    Display::temperatureToString(buffer, temperature);
                     strcat(buffer, " C");
                 }
+            }
+
+            static void temperatureToString(char buffer[], double temperature) {
+                dtostrf(temperature, 5, 1, buffer);
             }
 
         public:
