@@ -1,8 +1,8 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_DISPLAY_H
 #define AIR_CONDITIONING_CONTROLLER_DISPLAY_H
 
-#include <stdio.h>
 #include <WString.h>
+#include "stdio.h"
 
 namespace ACC::Displays {
     /**
@@ -11,39 +11,40 @@ namespace ACC::Displays {
     class Display {
         protected:
             bool hasIndoorTemperature = false;
-            float indoorTemperature = 0;
+            double indoorTemperature = 0;
 
             bool hasOutdoorTemperature = false;
-            float outdoorTemperature = 0;
+            double outdoorTemperature = 0;
 
             bool hasTargetTemperature = false;
-            float targetTemperature = 0;
+            double targetTemperature = 0;
 
             bool isCoolingEnabled = false;
 
-            virtual void temperatureToString(char * buffer, bool hasTemperature, float temperature) {
+            virtual void temperatureToString(char * buffer, bool hasTemperature, double temperature) {
                 if (!hasTemperature) {
-                    sprintf(buffer, "- °C");
+                    strcpy(buffer, "- C");
                 } else {
-                    sprintf(buffer, "%.1f", (double) temperature);
+                    dtostrf(temperature, 5, 1, buffer);
+                    strcat(buffer, " C");
                 }
             }
 
         public:
             /** Sets indoor temperature visible on the display */
-            virtual void setIndoorTemperature(float temperature) {
+            virtual void setIndoorTemperature(double temperature) {
                 hasIndoorTemperature = true;
                 indoorTemperature = temperature;
             }
 
             /** Sets outdoor temperature visible on the display */
-            virtual void setOutdoorTemperature(float temperature) {
+            virtual void setOutdoorTemperature(double temperature) {
                 hasOutdoorTemperature = true;
                 outdoorTemperature = temperature;
             }
 
             /** Sets requested target cooling temperature visible on the display */
-            virtual void setTargetTemperature(float temperature) {
+            virtual void setTargetTemperature(double temperature) {
                 hasTargetTemperature = true;
                 targetTemperature = temperature;
             }

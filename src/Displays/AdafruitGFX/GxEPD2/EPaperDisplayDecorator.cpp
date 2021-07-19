@@ -12,25 +12,28 @@ EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::EPaperDisplayDecorator(
 }
 
 template<typename DRIVER, const uint16_t PAGE_HEIGHT>
-void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setIndoorTemperature(float temperature) {
+void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setIndoorTemperature(double temperature) {
     if (indoorTemperature != temperature) {
         Display::setIndoorTemperature(temperature);
+        decoratedDisplay.setIndoorTemperature(temperature);
         isRedrawRequired = true;
     }
 }
 
 template<typename DRIVER, const uint16_t PAGE_HEIGHT>
-void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setOutdoorTemperature(float temperature) {
+void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setOutdoorTemperature(double temperature) {
     if (outdoorTemperature != temperature) {
         Display::setOutdoorTemperature(temperature);
+        decoratedDisplay.setOutdoorTemperature(temperature);
         isRedrawRequired = true;
     }
 }
 
 template<typename DRIVER, const uint16_t PAGE_HEIGHT>
-void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setTargetTemperature(float temperature) {
+void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setTargetTemperature(double temperature) {
     if (targetTemperature != temperature) {
         Display::setTargetTemperature(temperature);
+        decoratedDisplay.setTargetTemperature(temperature);
         isRedrawRequired = true;
     }
 }
@@ -39,6 +42,7 @@ template<typename DRIVER, const uint16_t PAGE_HEIGHT>
 void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setCoolingIndicator(bool isCooling) {
     if (isCoolingEnabled != isCooling) {
         Display::setCoolingIndicator(isCooling);
+        decoratedDisplay.setCoolingIndicator(isCooling);
         isRedrawRequired = true;
     }
 }

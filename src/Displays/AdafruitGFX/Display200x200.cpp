@@ -1,6 +1,6 @@
 #include "Displays/AdafruitGFX/Display200x200.h"
 #include <Fonts/FreeSans9pt7b.h>
-#include <Fonts/FreeSansBold12pt7b.h>
+#include <Fonts/FreeSansBold9pt7b.h>
 
 using namespace ACC::Displays::AdafruitGFX;
 
@@ -10,18 +10,16 @@ Display200x200::Display200x200(Adafruit_GFX &gfx) :
 }
 
 void Display200x200::draw() {
-    char indoorTempString[10];
-    char outdoorTempString[10];
-    char targetTempString[10];
+    char buffer[10];
 
-    temperatureToString(indoorTempString, hasIndoorTemperature, indoorTemperature);
-    drawTemperature("Indoor", indoorTempString, 0, false, true);
+    temperatureToString(buffer, hasIndoorTemperature, indoorTemperature);
+    drawTemperature("In", buffer, 5, false, true);
 
-    temperatureToString(targetTempString, hasTargetTemperature, targetTemperature);
-    drawTemperature("Target", targetTempString, 60, false, true);
+    temperatureToString(buffer, hasTargetTemperature, targetTemperature);
+    drawTemperature("Set", buffer, 70, false, true);
 
-    temperatureToString(outdoorTempString, hasOutdoorTemperature, outdoorTemperature);
-    drawTemperature("Outdoor", outdoorTempString, 120, false, false);
+    temperatureToString(buffer, hasOutdoorTemperature, outdoorTemperature);
+    drawTemperature("Out", buffer, 135, false, false);
 }
 
 void Display200x200::drawTemperature(
@@ -32,13 +30,14 @@ void Display200x200::drawTemperature(
         bool withRightBorder
 ) {
     if (withLeftBorder) {
-        gfx.drawFastVLine(xOffset + 5, 5, 50, 0x0000);
+        gfx.drawFastVLine(xOffset, 5, 50, 0x0000);
     }
 
     if (withRightBorder) {
-        gfx.drawFastVLine(xOffset + 5 + 60, 5, 50, 0x0000);
+        gfx.drawFastVLine(xOffset + 65, 5, 50, 0x0000);
     }
 
+    gfx.drawFastHLine(xOffset + 5, 60, 55, 0x0000);
     gfx.setTextColor(0x0000);
 
     int16_t textRectLeft, textRectTop;
@@ -46,12 +45,11 @@ void Display200x200::drawTemperature(
 
     gfx.setFont(&FreeSans9pt7b);
     gfx.getTextBounds(label, 0, 0, &textRectLeft, &textRectTop, &textRectWidth, &textRectHeight);
-    Serial.println(textRectTop, textRectHeight);
-    gfx.setCursor(xOffset + 5, textRectTop + textRectHeight);
+    gfx.setCursor(xOffset + 5, 15);
     gfx.print(label);
 
-    gfx.setFont(&FreeSansBold12pt7b);
+    gfx.setFont(&FreeSansBold9pt7b);
     gfx.getTextBounds(temperature, 0, 0, &textRectLeft, &textRectTop, &textRectWidth, &textRectHeight);
-    gfx.setCursor((60 - textRectWidth) / 2 + 10, 25 + textRectTop + textRectHeight);
+    gfx.setCursor(xOffset + (65 - textRectWidth) / 2, 45);
     gfx.print(temperature);
 }
