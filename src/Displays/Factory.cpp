@@ -29,5 +29,5 @@ Display & Factory::createWaveShare3Color200x200Display(
                 driver
             );
 
-    return graphicDisplay;
+    return ePaperDisplay;
 }
