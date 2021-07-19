@@ -66,6 +66,12 @@ bool EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::isTemperatureSignificantlyDiff
     return strcmp(buff1, buff2) != 0;
 }
 
+template<typename DRIVER, const uint16_t PAGE_HEIGHT>
+void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::setIndoorTemperatureWarning(bool hasWarning) {
+    Display::setIndoorTemperatureWarning(hasWarning);
+    decoratedDisplay.setIndoorTemperatureWarning(hasWarning);
+}
+
 namespace ACC::Displays::AdafruitGFX::GxEPD2 {
     template
     class EPaperDisplayDecorator<GxEPD2_154_Z90c, 8>;

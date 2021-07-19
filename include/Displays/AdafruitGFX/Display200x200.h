@@ -17,7 +17,8 @@ namespace ACC::Displays::AdafruitGFX {
                     const char label[],
                     const char temperature[],
                     short xOffset,
-                    bool withRightBorder
+                    bool withRightBorder,
+                    bool withWarning
             );
         public:
             explicit Display200x200(Adafruit_GFX & gfx);

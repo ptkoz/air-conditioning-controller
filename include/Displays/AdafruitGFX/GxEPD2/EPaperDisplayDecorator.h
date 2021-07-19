@@ -23,6 +23,7 @@ namespace ACC::Displays::AdafruitGFX::GxEPD2 {
             void setOutdoorTemperature(double temperature) override;
             void setTargetTemperature(double temperature) override;
             void setCoolingIndicator(bool isCooling) override;
+            void setIndoorTemperatureWarning(bool hasWarning) override;
             void draw() override;
     };
 }

@@ -20,6 +20,7 @@ namespace ACC::Displays {
             double targetTemperature = 0;
 
             bool isCoolingEnabled = false;
+            bool hasIndoorTemperatureWarning = false;
 
             static void formatTemperatureString(char buffer[], bool hasTemperature, double temperature) {
                 if (!hasTemperature) {
@@ -56,6 +57,10 @@ namespace ACC::Displays {
             /** Set indicator status for whether air conditioning is enabled or not */
             virtual void setCoolingIndicator(bool isCooling) {
                 isCoolingEnabled = isCooling;
+            }
+
+            virtual void setIndoorTemperatureWarning(bool hasWarning) {
+                hasIndoorTemperatureWarning = hasWarning;
             }
 
             /** Ensure all the latest information is displayed on the screen */
