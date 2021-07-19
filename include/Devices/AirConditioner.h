@@ -7,8 +7,10 @@ namespace ACC::Devices {
      */
     class AirConditioner {
         public:
-            virtual void turnOn() = 0;
-            virtual void turnOff() = 0;
+            /** Tries to turn on the AC */
+            virtual bool turnOn() = 0;
+            /** Tries to turn off the AC */
+            virtual bool turnOff() = 0;
     };
 }
 

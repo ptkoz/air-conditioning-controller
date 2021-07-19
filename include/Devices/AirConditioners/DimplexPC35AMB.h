@@ -10,15 +10,18 @@ namespace ACC::Devices::AirConditioners {
      */
     class DimplexPC35AMB : public AirConditioner {
         private:
+            unsigned long lastStatusChangeTimestamp;
             const unsigned short irFrequency;
             IRsend & irEmitter;
 
+            static unsigned long getMillisSinceEvent(unsigned long eventTimestamp);
+            bool canChangeStatus() const;
         public:
             explicit DimplexPC35AMB(unsigned char irPin);
             explicit DimplexPC35AMB(IRsend & irEmitter);
             ~DimplexPC35AMB();
-            void turnOn() override;
-            void turnOff() override;
+            bool turnOn() override;
+            bool turnOff() override;
             void setLowSpeed();
             void setHighSpeed();
     };
