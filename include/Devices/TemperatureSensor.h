@@ -4,7 +4,7 @@
 namespace ACC::Devices {
     class TemperatureSensor {
         public:
-            virtual short int getTemperature() = 0;
+            virtual double getTemperature() = 0;
     };
 }
 

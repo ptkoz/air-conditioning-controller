@@ -13,26 +13,21 @@ void Display200x200::draw() {
     char buffer[10];
 
     temperatureToString(buffer, hasIndoorTemperature, indoorTemperature);
-    drawTemperature("In", buffer, 5, false, true);
+    drawTemperature("In", buffer, 5, true);
 
     temperatureToString(buffer, hasTargetTemperature, targetTemperature);
-    drawTemperature("Set", buffer, 70, false, true);
+    drawTemperature("Set", buffer, 70, true);
 
     temperatureToString(buffer, hasOutdoorTemperature, outdoorTemperature);
-    drawTemperature("Out", buffer, 135, false, false);
+    drawTemperature("Out", buffer, 135, false);
 }
 
 void Display200x200::drawTemperature(
         const char label[],
         const char temperature[],
         short xOffset,
-        bool withLeftBorder,
         bool withRightBorder
 ) {
-    if (withLeftBorder) {
-        gfx.drawFastVLine(xOffset, 5, 50, 0x0000);
-    }
-
     if (withRightBorder) {
         gfx.drawFastVLine(xOffset + 65, 5, 50, 0x0000);
     }

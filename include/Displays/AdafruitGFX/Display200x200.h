@@ -17,7 +17,6 @@ namespace ACC::Displays::AdafruitGFX {
                     const char label[],
                     const char temperature[],
                     short xOffset,
-                    bool withLeftBorder,
                     bool withRightBorder
             );
         public:
