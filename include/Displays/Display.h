@@ -23,9 +23,9 @@ namespace ACC::Displays {
 
             virtual void temperatureToString(char * buffer, bool hasTemperature, float temperature) {
                 if (!hasTemperature) {
-                    sprintf(buffer, (const char *)F("- °C"));
+                    sprintf(buffer, "- °C");
                 } else {
-                    sprintf(buffer, (const char *)F("%.1f"), (double) temperature);
+                    sprintf(buffer, "%.1f", (double) temperature);
                 }
             }
 

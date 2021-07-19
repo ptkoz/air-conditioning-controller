@@ -1,4 +1,3 @@
-#include "Displays/Factory.h"
 #include "Displays/AdafruitGFX/GxEPD2/EPaperDisplayDecorator.h"
 
 using namespace ACC::Displays::AdafruitGFX::GxEPD2;
@@ -51,10 +50,11 @@ void EPaperDisplayDecorator<DRIVER, PAGE_HEIGHT>::draw() {
         do {
             decoratedDisplay.draw();
         } while (driver.nextPage());
+        isRedrawRequired = false;
     }
 }
 
 namespace ACC::Displays::AdafruitGFX::GxEPD2 {
     template
-    class EPaperDisplayDecorator<GxEPD2_154_Z90c, WAVESHARE_200x200_PAGE_HEIGHT>;
+    class EPaperDisplayDecorator<GxEPD2_154_Z90c, 8>;
 }
