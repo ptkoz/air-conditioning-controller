@@ -17,7 +17,7 @@ namespace ACC {
             Displays::Display & display;
 
         public:
-            Controller(
+            explicit Controller(
                     Devices::AirConditioner & airConditioner,
                     Devices::TemperatureSensor & temperatureSensor,
                     Displays::Display & display,
