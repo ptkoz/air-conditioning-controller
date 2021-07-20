@@ -71,24 +71,7 @@ void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedba
  * @param aLEDFeedbackPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
-    // must exclude cores by MCUdude, MEGATINYCORE, NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
-#if (!defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)) \
-        && !defined(SUPPRESS_ERROR_MESSAGE_FOR_BEGIN) \
-        && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) \
-        && !defined(ESP32) && !defined(ESP8266) && !defined(MEGATINYCORE) \
-        && !defined(MINICORE) && !defined(MIGHTYCORE) && !defined(MEGACORE) && !defined(MAJORCORE) \
-    && !(defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)) && !(defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32))
-    /*
-     * This error shows up, if this function is really used/called by the user program.
-     * This check works only if lto is enabled, otherwise it always pops up :-(.
-     * In this case activate the line #define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN in IRremote.h to suppress this message.
-     * I know now way to check for lto flag here.
-     */
-    UsageError(
-            "Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if SEND_PWM_BY_TIMER is not defined or USE_NO_SEND_PWM is defined or enable lto or activate the line #define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN in IRremote.h.");
-#endif
 
-    setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);
 }
 
 /**
@@ -97,91 +80,6 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
  * @param aNumberOfRepeats Number of repeats to send after the initial data.
  */
 size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
-
-    auto tProtocol = aIRSendData->protocol;
-    auto tAddress = aIRSendData->address;
-    auto tCommand = aIRSendData->command;
-    bool tSendRepeat = (aIRSendData->flags & IRDATA_FLAGS_IS_REPEAT);
-//    switch (tProtocol) { // 26 bytes bigger than if, else if, else
-//    case NEC:
-//        sendNEC(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
-//        break;
-//    case SAMSUNG:
-//        sendSamsung(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
-//        break;
-//    case SONY:
-//        sendSony(tAddress, tCommand, aNumberOfRepeats, aIRSendData->numberOfBits);
-//        break;
-//    case PANASONIC:
-//        sendPanasonic(tAddress, tCommand, aNumberOfRepeats);
-//        break;
-//    case DENON:
-//        sendDenon(tAddress, tCommand, aNumberOfRepeats);
-//        break;
-//    case SHARP:
-//        sendSharp(tAddress, tCommand, aNumberOfRepeats);
-//        break;
-//    case JVC:
-//        sendJVC((uint8_t) tAddress, (uint8_t) tCommand, aNumberOfRepeats); // casts are required to specify the right function
-//        break;
-//    case RC5:
-//        sendRC5(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
-//        break;
-//    case RC6:
-//        // No toggle for repeats//        sendRC6(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
-//        break;
-//    default:
-//        break;
-//    }
-
-    /*
-     * Order of protocols is in guessed relevance :-)
-     */
-    if (tProtocol == NEC) {
-        sendNEC(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
-
-    } else if (tProtocol == SAMSUNG) {
-        sendSamsung(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
-
-    } else if (tProtocol == SONY) {
-        sendSony(tAddress, tCommand, aNumberOfRepeats, aIRSendData->numberOfBits);
-
-    } else if (tProtocol == PANASONIC) {
-        sendPanasonic(tAddress, tCommand, aNumberOfRepeats);
-
-    } else if (tProtocol == DENON) {
-        sendDenon(tAddress, tCommand, aNumberOfRepeats);
-
-    } else if (tProtocol == SHARP) {
-        sendSharp(tAddress, tCommand, aNumberOfRepeats);
-
-    } else if (tProtocol == LG) {
-        sendLG(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
-
-    } else if (tProtocol == JVC) {
-        sendJVC((uint8_t) tAddress, (uint8_t) tCommand, aNumberOfRepeats); // casts are required to specify the right function
-
-    } else if (tProtocol == RC5) {
-        sendRC5(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
-
-    } else if (tProtocol == RC6) {
-        sendRC6(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
-
-    } else if (tProtocol == ONKYO) {
-        sendOnkyo(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
-
-    } else if (tProtocol == APPLE) {
-        sendApple(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
-
-#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
-    } else if (tProtocol == BOSEWAVE) {
-        sendBoseWave(tCommand, aNumberOfRepeats);
-
-    } else if (tProtocol == LEGO_PF) {
-        sendLegoPowerFunctions(tAddress, tCommand, tCommand >> 4, tSendRepeat); // send 5 autorepeats
-#endif
-
-    }
     return 1;
 }
 
@@ -205,7 +103,7 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLen
         }
     }
 
-//    ledOff();  // Always end with the LED off
+    IRLedOff();  // Always end with the LED off
 }
 
 /**
@@ -213,18 +111,7 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLen
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
-// Set IR carrier frequency
-    enableIROut(aIRFrequencyKilohertz);
 
-    for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
-        if (i & 1) {
-            // Odd
-            space(aBufferWithTicks[i] * MICROS_PER_TICK);
-        } else {
-            mark(aBufferWithTicks[i] * MICROS_PER_TICK);
-        }
-    }
-    IRLedOff();  // Always end with the LED off
 }
 
 /**
@@ -232,25 +119,7 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuf
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
-#if !defined(__AVR__)
-    sendRaw(aBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
-#else
-// Set IR carrier frequency
-    enableIROut(aIRFrequencyKilohertz);
-    /*
-     * Raw data starts with a mark
-     */
-    for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
-        uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
-        if (i & 1) {
-            // Odd
-            space(duration);
-        } else {
-            mark(duration);
-        }
-    }
-//    ledOff();  // Always end with the LED off
-#endif
+
 }
 
 /**
@@ -258,23 +127,7 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aL
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
-#if !defined(__AVR__)
-    sendRaw(aBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
-#else
-// Set IR carrier frequency
-    enableIROut(aIRFrequencyKilohertz);
 
-    for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
-        uint16_t duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint16_t) MICROS_PER_TICK;
-        if (i & 1) {
-            // Odd
-            space(duration);
-        } else {
-            mark(duration);
-        }
-    }
-    IRLedOff();  // Always end with the LED off
-#endif
 }
 
 /**

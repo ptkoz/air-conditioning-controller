@@ -19,7 +19,6 @@ ACC::Controller controller(airConditioner, temperatureSensor, mainDisplay, 22.5)
 void setup() {
     driver.init();
     driver.setRotation(1);
-
     IrSender.begin(3, false);
 }
 

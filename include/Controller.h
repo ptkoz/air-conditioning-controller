@@ -9,7 +9,7 @@ namespace ACC {
     class Controller {
         private:
             double targetTemperature;
-            const double temperatureTolerance = 0.5;
+            const double temperatureTolerance = 0.25;
             bool isAirConditionerEnabled;
 
             Devices::AirConditioner & airConditioner;
