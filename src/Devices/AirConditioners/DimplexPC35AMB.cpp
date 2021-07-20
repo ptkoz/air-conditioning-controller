@@ -1,5 +1,5 @@
 #include "Devices/AirConditioners/DimplexPC35AMB.h"
-#include <IRremote.h>
+
 
 using namespace ACC::Devices::AirConditioners;
 
@@ -12,14 +12,6 @@ DimplexPC35AMB::DimplexPC35AMB(IRsend & irEmitter) :
         lastStatusChangeTimestamp(0),
         irFrequency(38),
         irEmitter(irEmitter) {
-}
-
-/**
- * Constructor that uses IRemote internal implementation as IR emitter.
- */
-DimplexPC35AMB::DimplexPC35AMB(unsigned char irPin) :
-        DimplexPC35AMB(IrSender) {
-    irEmitter.begin(irPin, false);
 }
 
 DimplexPC35AMB::~DimplexPC35AMB() = default;

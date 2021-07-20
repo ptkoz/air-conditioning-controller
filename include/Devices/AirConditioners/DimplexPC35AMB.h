@@ -17,7 +17,6 @@ namespace ACC::Devices::AirConditioners {
             static unsigned long getMillisSinceEvent(unsigned long eventTimestamp);
             bool canChangeStatus() const;
         public:
-            explicit DimplexPC35AMB(unsigned char irPin);
             explicit DimplexPC35AMB(IRsend & irEmitter);
             ~DimplexPC35AMB();
             bool turnOn() override;

@@ -59,63 +59,6 @@
  ****************************************************/
 
 //#define DEBUG // Activate this for lots of lovely debug output from the IRremote core.
-
-
-/****************************************************
- *                    RECEIVING
- ****************************************************/
-/**
- * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
- * to compensate for the signal forming of different IR receiver modules
- * For Vishay TSOP*, marks tend to be too long and spaces tend to be too short.
- * If you set MARK_EXCESS_MICROS to approx. 50us then the TSOP4838 works best.
- * At 100us it also worked, but not as well.
- * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
- *
- * The right value is critical for IR codes using short pulses like Denon / Sharp / Lego
- *
- *  Observed values:
- *  Delta of each signal type is around 50 up to 100 and at low signals up to 200. TSOP is better, especially at low IR signal level.
- *  VS1838      Mark Excess -50 to +50 us
- *  TSOP31238   Mark Excess 0 to +50
- */
-#if !defined(MARK_EXCESS_MICROS)
-// To change this value, you simply can add a line #define "MARK_EXCESS_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.h>"
-#define MARK_EXCESS_MICROS    20
-#endif
-
-/**
- * Minimum gap between IR transmissions, to detect the end of a protocol.
- * Must be greater than any space of a protocol e.g. the NEC header space of 4500 us.
- * Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.
- * Keep in mind, that this is the delay between the end of the received command and the start of decoding.
- */
-#if !defined(RECORD_GAP_MICROS)
-// To change this value, you simply can add a line #define "RECORD_GAP_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.h>"
-#define RECORD_GAP_MICROS   5000 // FREDRICH28AC / LG2 header space is 9700, NEC header space is 4500
-#endif
-/**
- * Threshold for warnings at printIRResult*() to report about changing the RECORD_GAP_MICROS value to a higher value.
- */
-#if !defined(RECORD_GAP_MICROS_WARNING_THRESHOLD)
-// To change this value, you simply can add a line #define "RECORD_GAP_MICROS_WARNING_THRESHOLD <My_new_value>" in your ino file before the line "#include <IRremote.h>"
-#define RECORD_GAP_MICROS_WARNING_THRESHOLD   20000
-#endif
-
-/** Minimum gap between IR transmissions, in MICROS_PER_TICK */
-#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK) // 221 for 1100
-
-/*
- * Activate this line if your receiver has an external output driver transistor / "inverted" output
- */
-//#define IR_INPUT_IS_ACTIVE_HIGH
-#ifdef IR_INPUT_IS_ACTIVE_HIGH
-// IR detector output is active high
-#define INPUT_MARK   1 ///< Sensor output for a mark ("flash")
-#else
-// IR detector output is active low
-#define INPUT_MARK   0 ///< Sensor output for a mark ("flash")
-#endif
 /****************************************************
  *                     SENDING
  ****************************************************/
@@ -148,7 +91,6 @@
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
-#include "IRReceive.cpp.h"
 #include "IRSend.cpp.h"
 
 /**
