@@ -12,7 +12,8 @@
 GxEPD2_3C<GxEPD2_154_Z90c, 8> driver(GxEPD2_154_Z90c(10,8,9,7));
 ACC::Displays::AdafruitGFX::Display200x200 graphicDisplay(driver);
 ACC::Displays::AdafruitGFX::GxEPD2::EPaperDisplayDecorator<GxEPD2_154_Z90c, 8> mainDisplay(graphicDisplay, driver);
-ACC::Devices::AirConditioners::DimplexPC35AMB airConditioner(IrSender);
+ACC::Time::Source timeSource;
+ACC::Devices::AirConditioners::DimplexPC35AMB airConditioner(IrSender, timeSource);
 ACC::Devices::TemperatureSensors::MCP9808 temperatureSensor(0x18);
 ACC::Controller controller(airConditioner, temperatureSensor, mainDisplay, 22.5);
 
@@ -20,6 +21,7 @@ void setup() {
     driver.init();
     driver.setRotation(1);
     IrSender.begin(3, false);
+    Serial.begin(9600);
 }
 
 void loop() {

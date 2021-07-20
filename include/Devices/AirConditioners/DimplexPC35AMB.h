@@ -1,7 +1,8 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_DIMPLEXPC35AMB_H
 #define AIR_CONDITIONING_CONTROLLER_DIMPLEXPC35AMB_H
 
-#include "devices/AirConditioner.h"
+#include "Devices/AirConditioner.h"
+#include "Time/Source.h"
 #include <IRSend.h>
 
 namespace ACC::Devices::AirConditioners {
@@ -10,19 +11,37 @@ namespace ACC::Devices::AirConditioners {
      */
     class DimplexPC35AMB : public AirConditioner {
         private:
-            unsigned long lastStatusChangeTimestamp;
-            const unsigned short irFrequency;
+            /** Reliable source of time */
+            const Time::Source & timeSource;
+
+            /** Timestamp of last device status change */
+            Time::Timestamp lastStatusChange;
+
+            /** IR Emitter frequency */
+            const unsigned char irFrequency;
+
+            /** IR emitter that sends signals to the device */
             IRsend & irEmitter;
 
-            static unsigned long getMillisSinceEvent(unsigned long eventTimestamp);
+            /** Whether device can be turned on / off */
             bool canChangeStatus() const;
         public:
-            explicit DimplexPC35AMB(IRsend & irEmitter);
-            ~DimplexPC35AMB();
+            /** Initializes the device with an IR receiver */
+            explicit DimplexPC35AMB(IRsend & irEmitter, const Time::Source & timeSource);
+
+            /**
+             * Turns on the device on if possible. Device cannot be turned on in grace period after previous turn on / off.
+             *
+             * @return true if signal to turn on has been sent, false otherwise
+             */
             bool turnOn() override;
+
+            /**
+             * Turns off the device on if possible. Device cannot be turned on in grace period after previous turn on / off.
+             *
+             * @return true if signal to turn off has been sent, false otherwise
+             */
             bool turnOff() override;
-            void setLowSpeed();
-            void setHighSpeed();
     };
 }
 
