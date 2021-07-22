@@ -10,18 +10,6 @@ namespace ACC::Displays {
      */
     class Display {
         protected:
-            bool hasIndoorTemperature = false;
-            double indoorTemperature = 0;
-
-            bool hasOutdoorTemperature = false;
-            double outdoorTemperature = 0;
-
-            bool hasTargetTemperature = false;
-            double targetTemperature = 0;
-
-            bool isCoolingEnabled = false;
-            bool hasIndoorTemperatureWarning = false;
-
             static void formatTemperatureString(char buffer[], bool hasTemperature, double temperature) {
                 if (!hasTemperature) {
                     strcpy(buffer, "- C");
@@ -37,34 +25,16 @@ namespace ACC::Displays {
 
         public:
             /** Sets indoor temperature visible on the display */
-            virtual void setIndoorTemperature(double temperature) {
-                hasIndoorTemperature = true;
-                indoorTemperature = temperature;
-            }
+            virtual void setIndoorTemperature(double temperature, bool withWarning) = 0;
 
             /** Sets outdoor temperature visible on the display */
-            virtual void setOutdoorTemperature(double temperature) {
-                hasOutdoorTemperature = true;
-                outdoorTemperature = temperature;
-            }
+            virtual void setOutdoorTemperature(double temperature) = 0;
 
             /** Sets requested target cooling temperature visible on the display */
-            virtual void setTargetTemperature(double temperature) {
-                hasTargetTemperature = true;
-                targetTemperature = temperature;
-            }
+            virtual void setTargetTemperature(double temperature) = 0;
 
             /** Set indicator status for whether air conditioning is enabled or not */
-            virtual void setCoolingIndicator(bool isCooling) {
-                isCoolingEnabled = isCooling;
-            }
-
-            virtual void setIndoorTemperatureWarning(bool hasWarning) {
-                hasIndoorTemperatureWarning = hasWarning;
-            }
-
-            /** Ensure all the latest information is displayed on the screen */
-            virtual void draw() = 0;
+            virtual void setCoolingIndicator(bool isCooling) = 0;
     };
 }
 

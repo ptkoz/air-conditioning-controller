@@ -1,13 +1,8 @@
 #include <Arduino.h>
-#include "Devices/AirConditioner.h"
-#include "Displays/Display.h"
-#include <IRremote.h>
-#include <GxEPD2_3C.h>
-#include <Displays/AdafruitGFX/GxEPD2/EPaperDisplayDecorator.h>
-#include <Displays/AdafruitGFX/Display200x200.h>
-#include <Controller.h>
+#include "Displays/AdafruitGFX/ILI9341.h"
+#include "Controller.h"
+#include "Devices/AirConditioners/RemoteAirConditioner.h"
 #include "Devices/TemperatureSensors/MCP9808.h"
-#include "Devices/AirConditioners/DimplexPC35AMB.h"
 
 #ifdef __arm__
 // should use uinstd.h to define sbrk but Due causes a conflict
@@ -27,24 +22,15 @@ int freeMemory() {
 #endif  // __arm__
 }
 
-int initialFreeMomory = freeMemory();
-
-GxEPD2_3C<GxEPD2_154_Z90c, 8> driver(GxEPD2_154_Z90c(10,8,9,7));
-ACC::Displays::AdafruitGFX::Display200x200 graphicDisplay(driver);
-ACC::Displays::AdafruitGFX::GxEPD2::EPaperDisplayDecorator<GxEPD2_154_Z90c, 8> mainDisplay(graphicDisplay, driver);
+ACC::Displays::AdafruitGFX::ILI9341 mainDisplay(10, 8, 11, 13, 24, 12, 9);
 ACC::Time::Source timeSource;
-ACC::Devices::AirConditioners::DimplexPC35AMB airConditioner(IrSender, timeSource);
+ACC::Devices::AirConditioners::RemoteAirConditioner airConditioner;
 ACC::Devices::TemperatureSensors::MCP9808 temperatureSensor(0x18);
-ACC::Controller controller(airConditioner, temperatureSensor, mainDisplay, 23.0);
-
-
+ACC::Controller controller(airConditioner, temperatureSensor, mainDisplay, timeSource);
 
 void setup() {
-    driver.init();
-    driver.setRotation(1);
-    IrSender.begin(3, false);
     Serial.begin(9600);
-    Serial.println(initialFreeMomory);
+    mainDisplay.begin();
 }
 
 void loop() {
