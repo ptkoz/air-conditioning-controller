@@ -29,9 +29,11 @@ void Display320x240::initialize() {
 
     redrawOutdoorTemperature("", outdoorTemperature.getFormattedTemperature());
     redrawPrimaryTemperature("", primaryTemperature.getFormattedTemperature(), standardFontColor);
+    redrawPrimaryHumidity("", primaryHumidity.getFormattedHumidity());
     redrawTargetPrimaryTemperature("", targetPrimaryTemperature.getFormattedTemperature());
-    redrawSecondaryTemperature("", secondaryTemperature.getFormattedTemperature());
     redrawCoolingIndicator("", "AC: Off");
+    redrawSecondaryTemperature("", secondaryTemperature.getFormattedTemperature());
+    redrawSecondaryHumidity("", secondaryHumidity.getFormattedHumidity());
 }
 
 void Display320x240::redrawOutdoorTemperature(const char * oldText, const char * newText) {
@@ -42,16 +44,24 @@ void Display320x240::redrawPrimaryTemperature(const char * oldText, const char *
     redrawText(oldText, newText, 5, 135, color, &NumericFontBig);
 }
 
+void Display320x240::redrawPrimaryHumidity(const char * oldText, const char * newText) {
+    redrawText(oldText, newText, 150, 135, standardFontColor, &NumericFontSmall);
+}
+
 void Display320x240::redrawTargetPrimaryTemperature(const char * oldText, const char * newText) {
     redrawText(oldText, newText, 240, 135, standardFontColor, &NumericFontSmall);
+}
+
+void Display320x240::redrawCoolingIndicator(const char * oldText, const char * newNext) {
+    redrawText(oldText, newNext, 240, 115, standardFontColor, &NumericFontSmall);
 }
 
 void Display320x240::redrawSecondaryTemperature(const char * oldText, const char * newText) {
     redrawText(oldText, newText, 5, 215, standardFontColor, &NumericFontBig);
 }
 
-void Display320x240::redrawCoolingIndicator(const char * oldText, const char * newNext) {
-    redrawText(oldText, newNext, 240, 115, standardFontColor, &NumericFontSmall);
+void Display320x240::redrawSecondaryHumidity(const char * oldText, const char * newText) {
+    redrawText(oldText, newText, 150, 215, standardFontColor, &NumericFontSmall);
 }
 
 void Display320x240::setOutdoorTemperature(const Measures::Temperature & temperature) {
@@ -76,6 +86,16 @@ void Display320x240::setPrimaryTemperature(const Measures::Temperature & tempera
     }
 }
 
+void Display320x240::setPrimaryHumidity(const ACC::Measures::Humidity & humidity) {
+    if (primaryHumidity != humidity) {
+        redrawPrimaryHumidity(
+            primaryHumidity.getFormattedHumidity(),
+            humidity.getFormattedHumidity()
+        );
+        primaryHumidity = humidity;
+    }
+}
+
 void Display320x240::setTargetPrimaryTemperature(const Measures::Temperature & temperature) {
     if (targetPrimaryTemperature != temperature) {
         redrawTargetPrimaryTemperature(
@@ -83,16 +103,6 @@ void Display320x240::setTargetPrimaryTemperature(const Measures::Temperature & t
             temperature.getFormattedTemperature()
         );
         targetPrimaryTemperature = temperature;
-    }
-}
-
-void Display320x240::setSecondaryTemperature(const Measures::Temperature & temperature) {
-    if (secondaryTemperature != temperature) {
-        redrawSecondaryTemperature(
-            secondaryTemperature.getFormattedTemperature(),
-            temperature.getFormattedTemperature()
-        );
-        secondaryTemperature = temperature;
     }
 }
 
@@ -106,6 +116,25 @@ void Display320x240::setCoolingIndicator(bool isCooling) {
     }
 }
 
+void Display320x240::setSecondaryTemperature(const Measures::Temperature & temperature) {
+    if (secondaryTemperature != temperature) {
+        redrawSecondaryTemperature(
+            secondaryTemperature.getFormattedTemperature(),
+            temperature.getFormattedTemperature()
+        );
+        secondaryTemperature = temperature;
+    }
+}
+
+void Display320x240::setSecondaryHumidity(const ACC::Measures::Humidity & humidity) {
+    if (secondaryHumidity != humidity) {
+        redrawSecondaryHumidity(
+            secondaryHumidity.getFormattedHumidity(),
+            humidity.getFormattedHumidity()
+        );
+        secondaryHumidity = humidity;
+    }
+}
 
 void Display320x240::redrawText(
     const char * oldText,
@@ -126,3 +155,6 @@ void Display320x240::redrawText(
     gfx.setTextColor(color);
     gfx.print(newText);
 }
+
+
+
