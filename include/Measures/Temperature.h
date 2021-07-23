@@ -11,7 +11,7 @@ namespace ACC::Measures {
      */
     class Temperature : public DoubleValue {
         protected:
-            static constexpr unsigned char formattedBufferSize = 8;
+            static constexpr unsigned char formattedBufferSize = 7;
             char formattedValue[formattedBufferSize];
         public:
             /** Construct from temperature value */

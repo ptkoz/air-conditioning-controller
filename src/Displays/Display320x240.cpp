@@ -1,6 +1,7 @@
 #include "Displays/Display320x240.h"
-#include <Fonts/FreeSans9pt7b.h>
-#include <Fonts/FreeSansBold18pt7b.h>
+#include "Displays/fonts/NumericFontBig.h"
+#include "Displays/fonts/NumericFontSmall.h"
+#include "Displays/fonts/LabelFont.h"
 
 using namespace ACC::Displays;
 
@@ -12,7 +13,7 @@ void Display320x240::initialize() {
 
     gfx.fillScreen(backgroundColor);
     gfx.setTextColor(standardFontColor);
-    gfx.setFont(&FreeSans9pt7b);
+    gfx.setFont(&LabelFont);
 
     gfx.setCursor(5, 20);
     gfx.print(F("Za oknem"));
@@ -34,23 +35,23 @@ void Display320x240::initialize() {
 }
 
 void Display320x240::redrawOutdoorTemperature(const char * oldText, const char * newText) {
-    redrawText(oldText, newText, 5, 60, standardFontColor, &FreeSansBold18pt7b);
+    redrawText(oldText, newText, 5, 60, standardFontColor, &NumericFontBig);
 }
 
 void Display320x240::redrawPrimaryTemperature(const char * oldText, const char * newText, unsigned int color) {
-    redrawText(oldText, newText, 5, 135, color, &FreeSansBold18pt7b);
+    redrawText(oldText, newText, 5, 135, color, &NumericFontBig);
 }
 
 void Display320x240::redrawTargetPrimaryTemperature(const char * oldText, const char * newText) {
-    redrawText(oldText, newText, 140, 135, standardFontColor, &FreeSans9pt7b);
+    redrawText(oldText, newText, 240, 135, standardFontColor, &NumericFontSmall);
 }
 
 void Display320x240::redrawSecondaryTemperature(const char * oldText, const char * newText) {
-    redrawText(oldText, newText, 5, 215, standardFontColor, &FreeSansBold18pt7b);
+    redrawText(oldText, newText, 5, 215, standardFontColor, &NumericFontBig);
 }
 
 void Display320x240::redrawCoolingIndicator(const char * oldText, const char * newNext) {
-    redrawText(oldText, newNext, 240, 135, standardFontColor, &FreeSans9pt7b);
+    redrawText(oldText, newNext, 240, 115, standardFontColor, &NumericFontSmall);
 }
 
 void Display320x240::setOutdoorTemperature(const Measures::Temperature & temperature) {

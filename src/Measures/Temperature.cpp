@@ -14,10 +14,10 @@ Temperature::Temperature(double temperature):
         formattedValue{} {
 
     if (isnan(rawValue)) {
-        strncpy(formattedValue, "  -.- C", formattedBufferSize);
+        strncpy(formattedValue, "  -.-C", formattedBufferSize);
     } else {
-        dtostrf(temperature, 6, 1, formattedValue);
-        strcat(formattedValue, " C");
+        dtostrf(temperature, 5, 1, formattedValue);
+        strcat(formattedValue, "C");
     }
 }
 
