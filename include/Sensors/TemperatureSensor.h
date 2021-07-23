@@ -1,11 +1,15 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_TEMPERATURESENSOR_H
 #define AIR_CONDITIONING_CONTROLLER_TEMPERATURESENSOR_H
 
-namespace ACC::Devices {
+#include <Measures/Temperature.h>
+
+namespace ACC::Sensors {
+    /**
+     * An abstract temperature sensor
+     */
     class TemperatureSensor {
         public:
-            virtual void measure() = 0;
-            virtual double getTemperature() = 0;
+            virtual Measures::Temperature measureTemperature() = 0;
     };
 }
 

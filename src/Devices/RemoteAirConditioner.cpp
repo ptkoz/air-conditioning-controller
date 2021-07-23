@@ -1,7 +1,7 @@
-#include "Devices/AirConditioners/RemoteAirConditioner.h"
+#include "Devices/RemoteAirConditioner.h"
 
 
-using namespace ACC::Devices::AirConditioners;
+using namespace ACC::Devices;
 
 
 bool RemoteAirConditioner::turnOn() {

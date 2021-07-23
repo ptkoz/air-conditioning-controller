@@ -1,13 +1,16 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_SHT35_H
 #define AIR_CONDITIONING_CONTROLLER_SHT35_H
 
-#include "../TemperatureSensor.h"
+#include "Sensors/TemperatureSensor.h"
 #include <Wire.h>
 #include <SHT31.h>
 
 #define SHT35_NUMBER_OF_TEMPERATURE_MEASURES 5
 
-namespace ACC::Devices::TemperatureSensors {
+namespace ACC::Sensors {
+    /**
+     * An SHT35 temperature & humidity sensor
+     */
     class SHT35 : public TemperatureSensor {
         private:
             uint8_t sensorAddress;
@@ -19,8 +22,7 @@ namespace ACC::Devices::TemperatureSensors {
             explicit SHT35(uint8_t sensorAddress);
 
             void initialize();
-            void measure() override;
-            double getTemperature() override;
+            Measures::Temperature measureTemperature() override;
     };
 }
 

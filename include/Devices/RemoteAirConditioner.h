@@ -4,9 +4,9 @@
 #include "Devices/AirConditioner.h"
 #include "Time/Source.h"
 
-namespace ACC::Devices::AirConditioners {
+namespace ACC::Devices {
     /**
-     * Air conditioner implementation for Dimplex device
+     * Air conditioner implementation for a remote device controller over HC-12
      */
     class RemoteAirConditioner : public AirConditioner {
         public:

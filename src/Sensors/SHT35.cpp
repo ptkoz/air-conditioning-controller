@@ -1,26 +1,28 @@
-#include "Devices/TemperatureSensors/SHT35.h"
+#include "Sensors/SHT35.h"
 
-using namespace ACC::Devices::TemperatureSensors;
+using namespace ACC::Sensors;
 
-SHT35::SHT35(uint8_t sensorAddress): sensorAddress(sensorAddress), measureIndex(0) {
+SHT35::SHT35(uint8_t sensorAddress):
+    sensorAddress(sensorAddress),
+    measureIndex(0),
+    measures{} {
 
 }
 
 void SHT35::initialize() {
     sensor.begin(sensorAddress);
-    sensor.read(true);
+    sensor.heatOff();
 
     for (double & measure : measures) {
+        sensor.read(true);
         measure = sensor.getTemperature();
     }
 }
 
-void SHT35::measure() {
+ACC::Measures::Temperature SHT35::measureTemperature() {
     sensor.read(false);
     measures[measureIndex++ % SHT35_NUMBER_OF_TEMPERATURE_MEASURES] = sensor.getTemperature();
-}
 
-double SHT35::getTemperature() {
     double sum = 0;
     char count = 0;
     for (double measure : measures) {
@@ -28,7 +30,7 @@ double SHT35::getTemperature() {
         count++;
     }
 
-    return sum / count;
+    return Measures::Temperature(sum / count);
 }
 
 

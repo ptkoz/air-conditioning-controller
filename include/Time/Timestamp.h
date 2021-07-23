@@ -12,11 +12,14 @@ namespace ACC::Time {
 
         public:
             unsigned long millisSinceCpuStart;
+
             /** Construct with arbitrary time */
-            inline explicit Timestamp(unsigned long millisSinceCpuStart): millisSinceCpuStart(millisSinceCpuStart) { }
+            inline explicit Timestamp(unsigned long millisSinceCpuStart):
+                millisSinceCpuStart(millisSinceCpuStart) {}
 
             /** Construct with "current" time */
-            inline explicit Timestamp(): Timestamp(millis()) { }
+            inline explicit Timestamp():
+                Timestamp(millis()) {}
 
             /** Copy constructor */
             inline Timestamp(const Timestamp & timestamp) = default;
