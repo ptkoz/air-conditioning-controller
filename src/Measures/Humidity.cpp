@@ -17,7 +17,7 @@ Humidity::Humidity(double humidity):
         strncpy(formattedValue, "  -.-%", formattedBufferSize);
     } else {
         dtostrf(humidity, 5, 1, formattedValue);
-        strcat(formattedValue, "C%");
+        strcat(formattedValue, "%");
     }
 }
 
