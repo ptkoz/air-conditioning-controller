@@ -44,7 +44,7 @@ namespace ACC::Displays::AdafruitGFX {
             explicit Display320x240(Adafruit_GFX & gfx);
 
             /** Initializes the display */
-            virtual void begin();
+            virtual void initialize();
 
             void setIndoorTemperature(double temperature, bool withWarning) override;
             void setTargetTemperature(double temperature) override;

@@ -27,7 +27,7 @@ void Display320x240::drawTemperature(
     gfx.print(newTemperature);
 }
 
-void Display320x240::begin() {
+void Display320x240::initialize() {
     gfx.setRotation(1);
 
     gfx.fillScreen(backgroundColor);

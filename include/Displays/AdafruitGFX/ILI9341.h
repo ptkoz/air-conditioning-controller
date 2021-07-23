@@ -17,12 +17,12 @@ namespace ACC::Displays::AdafruitGFX {
                     tft(csPin, dcPin, mosiPin, clkPin, rstPin, misoPin),
                     backlightPin(backlightPin) {}
 
-            void begin() override {
+            void initialize() override {
                 pinMode(backlightPin, OUTPUT);
                 analogWrite(backlightPin, 50);
 
                 tft.begin();
-                Display320x240::begin();
+                Display320x240::initialize();
             }
     };
 }

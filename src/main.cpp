@@ -2,7 +2,7 @@
 #include "Displays/AdafruitGFX/ILI9341.h"
 #include "Controller.h"
 #include "Devices/AirConditioners/RemoteAirConditioner.h"
-#include "Devices/TemperatureSensors/MCP9808.h"
+#include "Devices/TemperatureSensors/SHT35.h"
 
 #ifdef __arm__
 // should use uinstd.h to define sbrk but Due causes a conflict
@@ -25,12 +25,15 @@ int freeMemory() {
 ACC::Displays::AdafruitGFX::ILI9341 mainDisplay(10, 8, 11, 13, 24, 12, 9);
 ACC::Time::Source timeSource;
 ACC::Devices::AirConditioners::RemoteAirConditioner airConditioner;
-ACC::Devices::TemperatureSensors::MCP9808 temperatureSensor(0x18);
+ACC::Devices::TemperatureSensors::SHT35 temperatureSensor(0x45);
 ACC::Controller controller(airConditioner, temperatureSensor, mainDisplay, timeSource);
 
 void setup() {
+    Wire.begin();
+    Wire.setClock(100000);
     Serial.begin(9600);
-    mainDisplay.begin();
+    mainDisplay.initialize();
+    temperatureSensor.initialize();
 }
 
 void loop() {
