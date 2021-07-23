@@ -94,14 +94,17 @@ void Display320x240::drawIndoorTemperature(const char * temperature, bool hasWar
 
 void Display320x240::drawTargetTemperature(const char * temperature) {
     drawTemperature(currentTargetTemperature, temperature, 140, 60, false, &FreeSans9pt7b);
+    strcpy(currentTargetTemperature, temperature);
 }
 
 void Display320x240::drawSecondTemperature(const char * temperature) {
     drawTemperature(currentIndoorTemperature, temperature, 5, 135, false, &FreeSansBold18pt7b);
+    strcpy(currentIndoorTemperature, temperature);
 }
 
 void Display320x240::drawOutdoorTemperature(const char * temperature) {
     drawTemperature(currentOutdoorTemperature, temperature, 5, 215, false, &FreeSansBold18pt7b);
+    strcpy(currentOutdoorTemperature, temperature);
 }
 
 void Display320x240::drawCoolingIndicator(bool isCooling) {
