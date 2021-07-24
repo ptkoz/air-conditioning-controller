@@ -42,7 +42,7 @@ void ACC::Controller::RemoteCommand::Processor::process() {
     if (lastSecondarySensorReceive.getMinAgeSeconds() > sensorTimeout) {
         display.setSecondaryTemperature(Measures::Temperature());
         display.setSecondaryHumidity(Measures::Humidity());
-        lastOutdoorSensorReceive = timeSource.currentTimestamp();
+        lastSecondarySensorReceive = timeSource.currentTimestamp();
     }
 
     if (stream.available()) {
@@ -73,6 +73,7 @@ void ACC::Controller::RemoteCommand::Processor::process() {
                     // temperature * humidity read
                     display.setSecondaryTemperature(Measures::Temperature(values[0]));
                     display.setSecondaryHumidity(Measures::Humidity(values[1]));
+                    lastSecondarySensorReceive = timeSource.currentTimestamp();
                     return;
                 }
 
@@ -86,6 +87,7 @@ void ACC::Controller::RemoteCommand::Processor::process() {
                 if (stream.readBytes(static_cast<char *>(static_cast<void *>(&value)), length) == length) {
                     // temperature * humidity read
                     display.setOutdoorTemperature(Measures::Temperature(value));
+                    lastOutdoorSensorReceive = timeSource.currentTimestamp();
                     return;
                 }
 
