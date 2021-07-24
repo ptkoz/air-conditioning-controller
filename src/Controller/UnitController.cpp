@@ -9,41 +9,75 @@ void UnitController::initialize() {
 }
 
 void UnitController::process() {
-    Temperature primaryTemperature = primaryTemperatureSensor.measureTemperature();
+    if (lastTemperatureUpdate.getMinAgeSeconds() >= temperatureUpdateInterval) {
+        Temperature temperature = temperatureSensor.measureTemperature();
 
-    if (!isAirConditionerEnabled && targetPrimaryTemperature.isAboveAcOnThreshold(primaryTemperature)) {
-        isAirConditionerEnabled = airConditioner.turnOn();
-        if (!isAirConditionerEnabled) {
-            // we successfully turned it on, save state
-            saveState();
+        if (isAcManagementEnabled) {
+            toggleAirConditioning(temperature);
         }
+
+        updateDisplayedTemperature(temperature);
+        lastTemperatureUpdate = timeSource.currentTimestamp();
     }
 
-    if (isAirConditionerEnabled && targetPrimaryTemperature.isBelowAcOffThreshold(primaryTemperature)) {
-        isAirConditionerEnabled = !airConditioner.turnOff();
-        if (!isAirConditionerEnabled) {
-            // we successfully turned it off, save state
-            saveState();
-        }
-    }
+    if (lastEvaluationTimestamp.getMinAgeSeconds() >= statusEvaluationInterval && isAcManagementEnabled) {
+        Temperature temperature = temperatureSensor.measureTemperature();
+        evaluateAirConditioningStatus(temperature);
 
-    display.setPrimaryTemperature(
-        primaryTemperature,
-        targetPrimaryTemperature.isWarningTemperature(primaryTemperature)
-    );
-    display.setTargetPrimaryTemperature(targetPrimaryTemperature);
-    display.setCoolingIndicator(isAirConditionerEnabled);
+        lastEvaluationTimestamp = timeSource.currentTimestamp();
+        refTemperature = temperature;
+    }
 }
 
-void UnitController::saveState() const {
-    EEPROM.put(0x01, isAirConditionerEnabled);
-    EEPROM.put(0x02, targetPrimaryTemperature.getTemperature());
+void UnitController::toggleAirConditioning(const Temperature & temperature) {
+    bool wasAirConditioningEnabled = isAcEnabled;
+
+    if (!isAcEnabled && targetTemperature.isTemperatureAboveRange(temperature)) {
+        isAcEnabled = airConditioner.turnOn();
+    }
+
+    if (isAcEnabled && targetTemperature.isTemperatureBellowRange(temperature)) {
+        isAcEnabled = !airConditioner.turnOff();
+    }
+
+    if (wasAirConditioningEnabled != isAcEnabled) {
+        // we successfully attempted turning AC On or Off, save state and reference temperature for further evaluation
+        persistState();
+        lastEvaluationTimestamp = timeSource.currentTimestamp();
+        refTemperature = temperature;
+    }
+}
+
+void UnitController::updateDisplayedTemperature(const Temperature & temperature) {
+    display.setPrimaryTemperature(
+        temperature,
+        targetTemperature.isWarningTemperature(temperature)
+    );
+    display.setTargetPrimaryTemperature(targetTemperature);
+    display.setCoolingIndicator(isAcEnabled);
+}
+
+void UnitController::evaluateAirConditioningStatus(const Temperature & temperature) {
+    if (isAcEnabled && targetTemperature.isTemperatureAboveRange(temperature) && !(temperature < refTemperature)) {
+        // AC should be on, but the temperature has not fallen significantly in last interval
+        airConditioner.turnOn();
+    }
+
+    if (!isAcEnabled && targetTemperature.isTemperatureBellowRange(temperature) && temperature < refTemperature) {
+        // AC should be off, but the temperature is still falling
+        airConditioner.turnOff();
+    }
+}
+
+void UnitController::persistState() const {
+    EEPROM.put(0x01, isAcEnabled);
+    EEPROM.put(0x02, targetTemperature.getTemperature());
 }
 
 void UnitController::restoreState() {
     double restoredTargetTemperature;
-    EEPROM.get(0x01, isAirConditionerEnabled);
+    EEPROM.get(0x01, isAcEnabled);
     EEPROM.get(0x02, restoredTargetTemperature);
 
-    targetPrimaryTemperature = TargetTemperature(restoredTargetTemperature);
+    targetTemperature = TargetTemperature(restoredTargetTemperature);
 }

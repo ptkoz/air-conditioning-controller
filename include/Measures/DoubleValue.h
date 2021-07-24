@@ -22,16 +22,17 @@ namespace ACC::Measures {
                 return rawValue != other.rawValue;
             }
 
+            /** Greater than / smaller than operators check 0.1 significance */
             bool operator>(const DoubleValue & other) const {
-                return rawValue > other.rawValue;
-            }
-
-            bool operator<(const DoubleValue & other) const {
-                return rawValue < other.rawValue;
+                return rawValue > other.rawValue + 0.1f;
             }
 
             bool operator>=(const DoubleValue & other) const {
                 return rawValue >= other.rawValue;
+            }
+
+            bool operator<(const DoubleValue & other) const {
+                return rawValue < other.rawValue - 0.1f;
             }
 
             bool operator<=(const DoubleValue & other) const {

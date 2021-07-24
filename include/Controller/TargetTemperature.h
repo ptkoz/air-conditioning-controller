@@ -17,12 +17,12 @@ namespace ACC::Controller {
                 Measures::Temperature() {}
 
             /** Checks if given temperature is higher than the threshold that enables AC */
-            bool isAboveAcOnThreshold(const Measures::Temperature & temperature) const {
+            bool isTemperatureAboveRange(const Measures::Temperature & temperature) const {
                 return temperature.getTemperature() > rawValue + acBoundary;
             }
 
             /** Checks if given temperature is lower than the threshold that disables AC */
-            bool isBelowAcOffThreshold(const Measures::Temperature & temperature) const {
+            bool isTemperatureBellowRange(const Measures::Temperature & temperature) const {
                 return temperature.getTemperature() < rawValue - acBoundary;
             }
 

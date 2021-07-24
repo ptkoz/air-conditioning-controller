@@ -13,7 +13,7 @@ ACC::Controller::WirelessController wirelessController(Serial, 2);
 ACC::Devices::RemoteAirConditioner airConditioner(wirelessController, timeSource);
 
 ACC::Sensors::SHT35 temperatureSensor(0x45);
-ACC::Controller::UnitController unitController(temperatureSensor, airConditioner, mainDisplay);
+ACC::Controller::UnitController unitController(temperatureSensor, airConditioner, mainDisplay, timeSource);
 
 void setup() {
     Serial.begin(9600);
@@ -25,6 +25,5 @@ void setup() {
 
 void loop() {
     unitController.process();
-    delay(5000);
 }
 

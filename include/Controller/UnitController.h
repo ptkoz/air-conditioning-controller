@@ -13,28 +13,66 @@ namespace ACC::Controller {
      */
     class UnitController {
         private:
-            TargetTemperature targetPrimaryTemperature = TargetTemperature();
-            bool isAirConditionerEnabled = false;
-
-            Sensors::TemperatureSensor & primaryTemperatureSensor;
+            Sensors::TemperatureSensor & temperatureSensor;
             Devices::AirConditioner & airConditioner;
             Displays::Display & display;
+            const Time::Source & timeSource;
+
+            /** Target temperature we want to achieve with Air Conditioning */
+            TargetTemperature targetTemperature = TargetTemperature();
+
+            /** Interval for updating temperature on screen and checking whether AC needs to be enabled / disabled */
+            static constexpr unsigned short temperatureUpdateInterval = 10; // seconds
+
+            /** Initialize with negative value so we get first temperature update without latency */
+            Time::Timestamp lastTemperatureUpdate = Time::Timestamp(-temperatureUpdateInterval);
+
+            /** Whether this controller should control the temperature or just update screen information */
+            bool isAcManagementEnabled = true;
+
+            /** Whether we think AC unit is currently enabled or not */
+            bool isAcEnabled = false;
+
+            /**
+             * Interval for validating that temperature falls down when ac is enabled and does not fall down whenAC
+             * is disabled.
+             */
+            static constexpr unsigned short statusEvaluationInterval = 180;
+
+            /** Last time we performed ac status evaluation */
+            Time::Timestamp lastEvaluationTimestamp = Time::Timestamp(0);
+
+            /** Reference temperature for the ac evaluation */
+            Measures::Temperature refTemperature = Measures::Temperature();
+
+            /** Toggles air conditioning when required */
+            void toggleAirConditioning(const Measures::Temperature & temperature);
+
+            /** Updates temperature visible on the screen */
+            void updateDisplayedTemperature(const Measures::Temperature & temperature);
+
+            /**
+             * Evaluates AC status and repeats last command if required, e.g. when AC should be on but we
+             * think it isn't because temperature is still raising.
+             */
+            void evaluateAirConditioningStatus(const Measures::Temperature & temperature);
 
             /** Saves controller state to persistent memory */
-            void saveState() const;
+            void persistState() const;
 
             /** Restores controller state from persistent memory */
             void restoreState();
-
         public:
             explicit UnitController(
                     Sensors::TemperatureSensor & primaryTemperatureSensor,
                     Devices::AirConditioner & airConditioner,
-                    Displays::Display & display
+                    Displays::Display & display,
+                    const Time::Source & timeSource
             ):
-                primaryTemperatureSensor(primaryTemperatureSensor),
+                temperatureSensor(primaryTemperatureSensor),
                 airConditioner(airConditioner),
-                display(display) {}
+                display(display),
+                timeSource(timeSource) {}
 
             void initialize();
             void process();
