@@ -12,12 +12,12 @@ ACC::Displays::AdafruitGFX::ILI9341 mainDisplay(10, 8, 11, 13, 24, 12, 9);
 ACC::Controller::WirelessController wirelessController(Serial, 2);
 ACC::Devices::RemoteAirConditioner airConditioner(wirelessController, timeSource);
 
-ACC::Sensors::SHT35 temperatureSensor(0x45);
-ACC::Controller::UnitController unitController(temperatureSensor, airConditioner, mainDisplay, timeSource);
+ACC::Sensors::SHT35 sht35Sensor(0x45, timeSource);
+ACC::Controller::UnitController unitController(sht35Sensor, sht35Sensor, airConditioner, mainDisplay, timeSource);
 
 void setup() {
     Serial.begin(9600);
-    temperatureSensor.initialize();
+    sht35Sensor.initialize();
     unitController.initialize();
     wirelessController.initialize();
     mainDisplay.initialize();

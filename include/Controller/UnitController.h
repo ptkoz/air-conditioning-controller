@@ -1,6 +1,7 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_UNITCONTROLLER_H
 #define AIR_CONDITIONING_CONTROLLER_UNITCONTROLLER_H
 
+#include <Sensors/HumiditySensor.h>
 #include "TargetTemperature.h"
 #include "Devices/AirConditioner.h"
 #include "Sensors/TemperatureSensor.h"
@@ -14,6 +15,7 @@ namespace ACC::Controller {
     class UnitController {
         private:
             Sensors::TemperatureSensor & temperatureSensor;
+            Sensors::HumiditySensor & humiditySensor;
             Devices::AirConditioner & airConditioner;
             Displays::Display & display;
             const Time::Source & timeSource;
@@ -49,7 +51,7 @@ namespace ACC::Controller {
             void toggleAirConditioning(const Measures::Temperature & temperature);
 
             /** Updates temperature visible on the screen */
-            void updateDisplayedTemperature(const Measures::Temperature & temperature);
+            void updateDisplayData(const Measures::Temperature & temperature, const Measures::Humidity & humidity);
 
             /**
              * Evaluates AC status and repeats last command if required, e.g. when AC should be on but we
@@ -64,12 +66,14 @@ namespace ACC::Controller {
             void restoreState();
         public:
             explicit UnitController(
-                    Sensors::TemperatureSensor & primaryTemperatureSensor,
+                    Sensors::TemperatureSensor & temperatureSensor,
+                    Sensors::HumiditySensor & humiditySensor,
                     Devices::AirConditioner & airConditioner,
                     Displays::Display & display,
                     const Time::Source & timeSource
             ):
-                temperatureSensor(primaryTemperatureSensor),
+                temperatureSensor(temperatureSensor),
+                humiditySensor(humiditySensor),
                 airConditioner(airConditioner),
                 display(display),
                 timeSource(timeSource) {}

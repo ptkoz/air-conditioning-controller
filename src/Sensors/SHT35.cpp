@@ -2,35 +2,50 @@
 
 using namespace ACC::Sensors;
 
-SHT35::SHT35(uint8_t sensorAddress):
-    sensorAddress(sensorAddress),
-    measureIndex(0),
-    measures{} {
-
-}
-
 void SHT35::initialize() {
     sensor.begin(sensorAddress);
     sensor.heatOff();
 
-    for (double & measure : measures) {
+    for (double & measure : temperatureMeasures) {
         sensor.read(true);
         measure = sensor.getTemperature();
+    }
+
+    for (double & measure : humidityMeasures) {
+        sensor.read(true);
+        measure = sensor.getHumidity();
     }
 }
 
 ACC::Measures::Temperature SHT35::measureTemperature() {
-    sensor.read(false);
-    measures[measureIndex++ % numberOfTemperatureMeasures] = sensor.getTemperature();
+    requestMeasurementFromSensor();
+    temperatureMeasures[temperatureMeasureIndex++ % numberOfMeasures] = sensor.getTemperature();
 
     double sum = 0;
-    char count = 0;
-    for (double measure : measures) {
+    for (double measure : temperatureMeasures) {
         sum += measure;
-        count++;
     }
 
-    return Measures::Temperature(sum / count);
+    return Measures::Temperature(sum / numberOfMeasures);
 }
+
+ACC::Measures::Humidity SHT35::measureHumidity() {
+    requestMeasurementFromSensor();
+
+    double sum = 0;
+    for (double measure : humidityMeasures) {
+        sum += measure;
+    }
+
+    return Measures::Humidity(sum / numberOfMeasures);
+}
+
+void SHT35::requestMeasurementFromSensor() {
+    if (lastSensorRead.getMinAgeSeconds() >= sensorReadInterval) {
+        sensor.read(true);
+        lastSensorRead = timeSource.currentTimestamp();
+    }
+}
+
 
 

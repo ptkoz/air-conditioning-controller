@@ -3,6 +3,7 @@
 
 using namespace ACC::Controller;
 using ACC::Measures::Temperature;
+using ACC::Measures::Humidity;
 
 void UnitController::initialize() {
     restoreState();
@@ -11,12 +12,14 @@ void UnitController::initialize() {
 void UnitController::process() {
     if (lastTemperatureUpdate.getMinAgeSeconds() >= temperatureUpdateInterval) {
         Temperature temperature = temperatureSensor.measureTemperature();
+        Humidity humidity = humiditySensor.measureHumidity();
+
 
         if (isAcManagementEnabled) {
             toggleAirConditioning(temperature);
         }
 
-        updateDisplayedTemperature(temperature);
+        updateDisplayData(temperature, humidity);
         lastTemperatureUpdate = timeSource.currentTimestamp();
     }
 
@@ -48,13 +51,14 @@ void UnitController::toggleAirConditioning(const Temperature & temperature) {
     }
 }
 
-void UnitController::updateDisplayedTemperature(const Temperature & temperature) {
+void UnitController::updateDisplayData(const Temperature & temperature, const Humidity & humidity) {
     display.setPrimaryTemperature(
         temperature,
         targetTemperature.isWarningTemperature(temperature)
     );
     display.setTargetPrimaryTemperature(targetTemperature);
     display.setCoolingIndicator(isAcEnabled);
+    display.setPrimaryHumidity(humidity);
 }
 
 void UnitController::evaluateAirConditioningStatus(const Temperature & temperature) {
