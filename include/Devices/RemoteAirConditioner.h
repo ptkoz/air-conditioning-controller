@@ -2,7 +2,7 @@
 #define AIR_CONDITIONING_CONTROLLER_REMOTEAIRCONDITIONER_H
 
 #include "Devices/AirConditioner.h"
-#include "Controller/WirelessExecutor.h"
+#include "Controller/RemoteCommandExecutor.h"
 #include "Time/Source.h"
 
 namespace ACC::Devices {
@@ -15,7 +15,7 @@ namespace ACC::Devices {
             static constexpr unsigned short minGracePeriodSeconds = 300;
 
             /** Remote command executor */
-            Controller::WirelessExecutor & wirelessExecutor;
+            Controller::RemoteCommand::Executor & remoteExecutor;
 
             /** Reliable source of time */
             const Time::Source & timeSource;
@@ -39,10 +39,10 @@ namespace ACC::Devices {
         public:
             /** Constructor */
             explicit RemoteAirConditioner(
-                Controller::WirelessExecutor & wirelessExecutor,
+                Controller::RemoteCommand::Executor & remoteExecutor,
                 const Time::Source & timeSource
             ):
-                wirelessExecutor(wirelessExecutor),
+                remoteExecutor(remoteExecutor),
                 timeSource(timeSource) {}
 
             /**

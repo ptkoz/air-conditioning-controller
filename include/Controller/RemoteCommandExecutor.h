@@ -1,15 +1,15 @@
-#ifndef AIR_CONDITIONING_CONTROLLER_WIRELESSEXECUTOR_H
-#define AIR_CONDITIONING_CONTROLLER_WIRELESSEXECUTOR_H
+#ifndef AIR_CONDITIONING_CONTROLLER_REMOTECOMMANDEXECUTOR_H
+#define AIR_CONDITIONING_CONTROLLER_REMOTECOMMANDEXECUTOR_H
 
 #include "Arduino.h"
 
-namespace ACC::Controller {
+namespace ACC::Controller::RemoteCommand {
     /**
      * Interface for executing remote commands
      */
-     class WirelessExecutor {
+     class Executor {
          public:
-             virtual void remoteCommand(
+             virtual void execute(
                  unsigned short address,
                  unsigned short command,
                  const void * message = nullptr,
@@ -18,4 +18,4 @@ namespace ACC::Controller {
      };
 }
 
-#endif //AIR_CONDITIONING_CONTROLLER_WIRELESSEXECUTOR_H
+#endif //AIR_CONDITIONING_CONTROLLER_REMOTECOMMANDEXECUTOR_H

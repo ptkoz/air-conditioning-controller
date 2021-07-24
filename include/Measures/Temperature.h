@@ -1,7 +1,6 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_TEMPERATURE_H
 #define AIR_CONDITIONING_CONTROLLER_TEMPERATURE_H
 
-#include <stdlib.h>
 #include <math.h>
 #include "DoubleValue.h"
 
@@ -23,10 +22,6 @@ namespace ACC::Measures {
             /** By default construct temperature with no actual value */
             explicit Temperature():
                     Temperature(NAN) {}
-
-            /** Construct from temperature string */
-            explicit Temperature(const char * temperature):
-                    Temperature(strtod(temperature, nullptr)) {}
 
             /** Return temperature value */
             double getTemperature() const {

@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include "Measures/Temperature.h"
 
 using namespace ACC::Measures;

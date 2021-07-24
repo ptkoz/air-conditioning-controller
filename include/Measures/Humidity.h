@@ -1,7 +1,6 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_HUMIDITY_H
 #define AIR_CONDITIONING_CONTROLLER_HUMIDITY_H
 
-#include <stdlib.h>
 #include <math.h>
 #include "DoubleValue.h"
 
@@ -23,10 +22,6 @@ namespace ACC::Measures {
             /** By default construct humidity with no actual value */
             explicit Humidity():
                 Humidity(NAN) {}
-
-            /** Construct from humidity string */
-            explicit Humidity(const char * humidity):
-                Humidity(strtod(humidity, nullptr)) {}
 
             /** Return humidity value */
             double getHumidity() const {

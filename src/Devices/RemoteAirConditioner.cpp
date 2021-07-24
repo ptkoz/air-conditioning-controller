@@ -9,7 +9,7 @@ bool RemoteAirConditioner::turnOn() {
         return false;
     }
 
-    wirelessExecutor.remoteCommand(0xA2, 0x01);
+    remoteExecutor.execute(0xA2, 0x01);
     lastTurnOnTimestamp = timeSource.currentTimestamp();
     return true;
 }
@@ -19,7 +19,7 @@ bool RemoteAirConditioner::turnOff() {
         return false;
     }
 
-    wirelessExecutor.remoteCommand(0xA2, 0x02);
+    remoteExecutor.execute(0xA2, 0x02);
     lastTurnOffTimestamp = timeSource.currentTimestamp();
     return true;
 }
