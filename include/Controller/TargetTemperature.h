@@ -6,8 +6,8 @@
 namespace ACC::Controller {
     class TargetTemperature : public Measures::Temperature {
         private:
-            static constexpr double acBoundary = 0.4f;
-            static constexpr double warningBoundary = 0.6f;
+            static constexpr double acBoundary = 0.3f;
+            static constexpr double warningBoundary = 0.5f;
         public:
             /** Construct from temperature value */
             explicit TargetTemperature(double temperature):
