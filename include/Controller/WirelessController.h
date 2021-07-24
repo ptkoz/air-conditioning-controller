@@ -1,7 +1,7 @@
 #ifndef AIR_CONDITIONING_CONTROLLER_WIRELESSCONTROLLER_H
 #define AIR_CONDITIONING_CONTROLLER_WIRELESSCONTROLLER_H
 
-#include <AltSoftSerial.h>
+#include <Stream.h>
 #include "WirelessExecutor.h"
 
 namespace ACC::Controller {
@@ -10,11 +10,12 @@ namespace ACC::Controller {
      */
     class WirelessController : public WirelessExecutor {
         private:
-            AltSoftSerial serial = AltSoftSerial();
+            Stream & dataStream;
             unsigned char setPin;
 
         public:
-            explicit WirelessController(unsigned char setPin):
+            explicit WirelessController(Stream & dataStream, unsigned char setPin):
+                dataStream(dataStream),
                 setPin(setPin) {}
 
             void initialize();

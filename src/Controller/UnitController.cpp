@@ -4,16 +4,7 @@
 using namespace ACC::Controller;
 using ACC::Measures::Temperature;
 
-UnitController::UnitController(
-    Sensors::TemperatureSensor & primaryTemperatureSensor,
-    Devices::AirConditioner & airConditioner,
-    Displays::Display & display
-):
-    targetPrimaryTemperature(),
-    isAirConditionerEnabled(false),
-    primaryTemperatureSensor(primaryTemperatureSensor),
-    airConditioner(airConditioner),
-    display(display) {
+void UnitController::initialize() {
     restoreState();
 }
 

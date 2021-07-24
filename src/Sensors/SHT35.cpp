@@ -21,7 +21,7 @@ void SHT35::initialize() {
 
 ACC::Measures::Temperature SHT35::measureTemperature() {
     sensor.read(false);
-    measures[measureIndex++ % SHT35_NUMBER_OF_TEMPERATURE_MEASURES] = sensor.getTemperature();
+    measures[measureIndex++ % numberOfTemperatureMeasures] = sensor.getTemperature();
 
     double sum = 0;
     char count = 0;

@@ -3,11 +3,22 @@
 using ACC::Controller::WirelessController;
 
 void WirelessController::initialize() {
-    AltSoftSerial::begin(9600);
-    serial.setTimeout(1000);
-
     pinMode(setPin, OUTPUT);
     digitalWrite(setPin, LOW);
+
+    dataStream.print("AT+C003");
+    while(dataStream.read() != -1);
+
+    dataStream.print("AT+FU1");
+    while(dataStream.read() != -1);
+
+    dataStream.print("AT+B9600");
+    while(dataStream.read() != -1);
+
+    pinMode(setPin, INPUT);
+    digitalWrite(setPin, LOW);
+
+    dataStream.setTimeout(1000);
 }
 
 void WirelessController::remoteCommand(
@@ -16,8 +27,8 @@ void WirelessController::remoteCommand(
     const void * message,
     size_t length
 ) {
-    serial.write(static_cast<const char *>(static_cast<const void *>(&address)), sizeof address);
-    serial.write(static_cast<const char *>(static_cast<const void *>(&command)), sizeof command);
-    serial.write(static_cast<const char *>(message), length);
-    serial.write((char) 0);
+    dataStream.write(static_cast<const char *>(static_cast<const void *>(&address)), sizeof address);
+    dataStream.write(static_cast<const char *>(static_cast<const void *>(&command)), sizeof command);
+    dataStream.write(static_cast<const char *>(message), length);
+    dataStream.write((char) 0);
 }

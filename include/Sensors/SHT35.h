@@ -5,19 +5,18 @@
 #include <Wire.h>
 #include <SHT31.h>
 
-#define SHT35_NUMBER_OF_TEMPERATURE_MEASURES 5
-
 namespace ACC::Sensors {
     /**
      * An SHT35 temperature & humidity sensor
      */
     class SHT35 : public TemperatureSensor {
         private:
+            static constexpr unsigned char numberOfTemperatureMeasures = 3;
             uint8_t sensorAddress;
             SHT31 sensor;
 
             unsigned char measureIndex;
-            double measures[SHT35_NUMBER_OF_TEMPERATURE_MEASURES];
+            double measures[numberOfTemperatureMeasures];
         public:
             explicit SHT35(uint8_t sensorAddress);
 

@@ -13,8 +13,8 @@ namespace ACC::Controller {
      */
     class UnitController {
         private:
-            TargetTemperature targetPrimaryTemperature;
-            bool isAirConditionerEnabled;
+            TargetTemperature targetPrimaryTemperature = TargetTemperature();
+            bool isAirConditionerEnabled = false;
 
             Sensors::TemperatureSensor & primaryTemperatureSensor;
             Devices::AirConditioner & airConditioner;
@@ -31,8 +31,12 @@ namespace ACC::Controller {
                     Sensors::TemperatureSensor & primaryTemperatureSensor,
                     Devices::AirConditioner & airConditioner,
                     Displays::Display & display
-            );
+            ):
+                primaryTemperatureSensor(primaryTemperatureSensor),
+                airConditioner(airConditioner),
+                display(display) {}
 
+            void initialize();
             void process();
     };
 }
