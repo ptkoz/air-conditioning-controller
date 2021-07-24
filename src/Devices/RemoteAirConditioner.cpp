@@ -5,21 +5,21 @@ using namespace ACC::Devices;
 
 
 bool RemoteAirConditioner::turnOn() {
-    if (!canChangeStatus()) {
+    if (!canTurnOn()) {
         return false;
     }
 
     wirelessExecutor.remoteCommand(0xA2, 0x01);
-    lastStatusChange = timeSource.currentTimestamp();
+    lastTurnOnTimestamp = timeSource.currentTimestamp();
     return true;
 }
 
 bool RemoteAirConditioner::turnOff() {
-    if (!canChangeStatus()) {
+    if (!canTurnOff()) {
         return false;
     }
 
     wirelessExecutor.remoteCommand(0xA2, 0x02);
-    lastStatusChange = timeSource.currentTimestamp();
+    lastTurnOffTimestamp = timeSource.currentTimestamp();
     return true;
 }
