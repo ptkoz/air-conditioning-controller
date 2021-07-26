@@ -2,19 +2,25 @@
 #define AIR_CONDITIONING_CONTROLLER_REMOTECOMMANDEXECUTOR_H
 
 #include "Arduino.h"
+#include "RemoteCommandRadio.h"
 
 namespace ACC::Controller::RemoteCommand {
     /**
      * Interface for executing remote commands
      */
      class Executor {
+         private:
+             Stream & stream;
          public:
-             virtual void execute(
+             explicit Executor(const Radio & radio):
+                stream(radio.getStream()) {}
+
+             void execute(
                  unsigned short address,
                  unsigned short command,
                  const void * message = nullptr,
                  size_t length = 0
-             ) = 0;
+             );
      };
 }
 

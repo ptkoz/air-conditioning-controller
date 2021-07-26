@@ -5,14 +5,14 @@
 #include "Time/Timestamp.h"
 #include "Time/Source.h"
 #include "Devices/RemoteAirConditioner.h"
-#include "RemoteCommandExecutor.h"
 #include "Displays/Display.h"
+#include "RemoteCommandRadio.h"
 
 namespace ACC::Controller::RemoteCommand {
     /**
      * Wireless controller reads remote commands and reacts to them. It can also sent commands to other devices.
      */
-    class Processor : public Executor {
+    class Processor {
         private:
             /** Address to listen commands for */
             static constexpr unsigned short listenAddress = 0xA1;
@@ -31,37 +31,23 @@ namespace ACC::Controller::RemoteCommand {
             Displays::Display & display;
             Devices::RemoteAirConditioner & remoteAirConditioner;
             Stream & stream;
-            unsigned char setPin;
             const Time::Source & timeSource;
 
             Time::Timestamp lastSecondarySensorReceive = Time::Timestamp();
             Time::Timestamp lastOutdoorSensorReceive = Time::Timestamp();
-
-            void enterATMode();
-            void leaveATMode();
         public:
             explicit Processor(
                 Displays::Display & display,
                 Devices::RemoteAirConditioner & remoteAirConditioner,
-                Stream & dataStream,
-                unsigned char setPin,
+                const Radio & radio,
                 const Time::Source & timeSource
             ):
                 display(display),
                 remoteAirConditioner(remoteAirConditioner),
-                stream(dataStream),
-                setPin(setPin),
+                stream(radio.getStream()),
                 timeSource(timeSource) {}
 
-            void initialize();
             void process();
-
-            void execute(
-                unsigned short address,
-                unsigned short command,
-                const void * message,
-                size_t length
-            ) override;
     };
 }
 
