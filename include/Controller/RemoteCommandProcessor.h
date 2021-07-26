@@ -35,6 +35,9 @@ namespace ACC::Controller::RemoteCommand {
 
             Time::Timestamp lastSecondarySensorReceive = Time::Timestamp();
             Time::Timestamp lastOutdoorSensorReceive = Time::Timestamp();
+
+            void enterATMode();
+            void leaveATMode();
         public:
             explicit Processor(
                 Displays::Display & display,

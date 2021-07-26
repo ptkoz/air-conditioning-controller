@@ -3,22 +3,34 @@
 using ACC::Controller::RemoteCommand::Processor;
 
 void Processor::initialize() {
-    pinMode(setPin, OUTPUT);
-    digitalWrite(setPin, LOW);
+    enterATMode();
 
-    stream.print("AT+C003");
-    while (stream.read() != -1);
+    stream.println("AT+C003");
+    delay(80);
+    stream.println("AT+FU1");
+    delay(80);
+    stream.println("AT+B9600");
+    delay(80);
 
-    stream.print("AT+FU1");
-    while (stream.read() != -1);
+    while (stream.available()) {
+        stream.write(stream.read());
+    }
 
-    stream.print("AT+B9600");
-    while (stream.read() != -1);
-
-    pinMode(setPin, INPUT);
-    digitalWrite(setPin, LOW);
+    leaveATMode();
 
     stream.setTimeout(1000);
+}
+
+void Processor::enterATMode() {
+    pinMode(setPin, OUTPUT);
+    digitalWrite(setPin, LOW);
+    delay(40);
+}
+
+void Processor::leaveATMode() {
+    pinMode(setPin, INPUT);
+    digitalWrite(setPin, LOW);
+    delay(80);
 }
 
 void Processor::execute(
