@@ -10,7 +10,7 @@
 
 namespace ACC::Controller::RemoteCommand {
     /**
-     * Wireless controller reads remote commands and reacts to them. It can also sent commands to other devices.
+     * Wireless controller reads remote commands and reacts to them
      */
     class Processor {
         private:
