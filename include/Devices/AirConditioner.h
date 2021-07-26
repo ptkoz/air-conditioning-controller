@@ -7,6 +7,8 @@ namespace ACC::Devices {
      */
     class AirConditioner {
         public:
+            /** Whether AC Unit is available (online) */
+            virtual bool isAvailable() = 0;
             /** Tries to turn on the AC */
             virtual bool turnOn() = 0;
             /** Tries to turn off the AC */

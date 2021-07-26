@@ -2,8 +2,9 @@
 #define AIR_CONDITIONING_CONTROLLER_REMOTECOMMANDPROCESSOR_H
 
 #include <Stream.h>
-#include <Time/Timestamp.h>
-#include <Time/Source.h>
+#include "Time/Timestamp.h"
+#include "Time/Source.h"
+#include "Devices/RemoteAirConditioner.h"
 #include "RemoteCommandExecutor.h"
 #include "Displays/Display.h"
 
@@ -18,9 +19,8 @@ namespace ACC::Controller::RemoteCommand {
 
             /** Recognized commands */
             static constexpr unsigned short setSecondaryTemperatureAndHumidity = 0x21;
-
-            /** Recognized commands */
             static constexpr unsigned short setOutdoorTemperature = 0x41;
+            static constexpr unsigned short acReceiverPing = 0x90;
 
             /**
              * If we don't get a new reading from remote sensor after this number of seconds we will reset the display
@@ -29,6 +29,7 @@ namespace ACC::Controller::RemoteCommand {
             static constexpr unsigned short sensorTimeout = 1800; // seconds, means 30 minutes
 
             Displays::Display & display;
+            Devices::RemoteAirConditioner & remoteAirConditioner;
             Stream & stream;
             unsigned char setPin;
             const Time::Source & timeSource;
@@ -41,11 +42,13 @@ namespace ACC::Controller::RemoteCommand {
         public:
             explicit Processor(
                 Displays::Display & display,
+                Devices::RemoteAirConditioner & remoteAirConditioner,
                 Stream & dataStream,
                 unsigned char setPin,
                 const Time::Source & timeSource
             ):
                 display(display),
+                remoteAirConditioner(remoteAirConditioner),
                 stream(dataStream),
                 setPin(setPin),
                 timeSource(timeSource) {}

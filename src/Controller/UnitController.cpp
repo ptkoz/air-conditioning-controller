@@ -35,12 +35,16 @@ void UnitController::process() {
 void UnitController::toggleAirConditioning(const Temperature & temperature) {
     bool wasAirConditioningEnabled = isAcEnabled;
 
-    if (!isAcEnabled && targetTemperature.isTemperatureAboveRange(temperature)) {
+    if (!isAcEnabled && targetTemperature.isTemperatureAboveRange(temperature) && airConditioner.isAvailable()) {
         isAcEnabled = airConditioner.turnOn();
     }
 
-    if (isAcEnabled && targetTemperature.isTemperatureBellowRange(temperature)) {
+    if (isAcEnabled && targetTemperature.isTemperatureBellowRange(temperature) && airConditioner.isAvailable()) {
         isAcEnabled = !airConditioner.turnOff();
+    }
+
+    if (isAcEnabled && !airConditioner.isAvailable()) {
+        isAcEnabled = false;
     }
 
     if (wasAirConditioningEnabled != isAcEnabled) {

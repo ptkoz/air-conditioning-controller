@@ -33,19 +33,7 @@ void Processor::leaveATMode() {
     delay(80);
 }
 
-void Processor::execute(
-    unsigned short address,
-    unsigned short command,
-    const void * message,
-    size_t length
-) {
-    stream.write(static_cast<const char *>(static_cast<const void *>(&address)), sizeof address);
-    stream.write(static_cast<const char *>(static_cast<const void *>(&command)), sizeof command);
-    stream.write(static_cast<const char *>(message), length);
-    stream.write((char) 0);
-}
-
-void ACC::Controller::RemoteCommand::Processor::process() {
+void Processor::process() {
     if (lastOutdoorSensorReceive.getMinAgeSeconds() > sensorTimeout) {
         display.setOutdoorTemperature(Measures::Temperature());
         lastOutdoorSensorReceive = timeSource.currentTimestamp();
@@ -106,10 +94,27 @@ void ACC::Controller::RemoteCommand::Processor::process() {
                 stream.find((unsigned char) 0);
                 break;
             }
+            case acReceiverPing: {
+                remoteAirConditioner.acknowledgePing();
+                stream.find((unsigned char) 0);
+                break;
+            }
             default: {
                 stream.find((unsigned char) 0);
                 break;
             }
         }
     }
+}
+
+void Processor::execute(
+    unsigned short address,
+    unsigned short command,
+    const void * message,
+    size_t length
+) {
+    stream.write(static_cast<const char *>(static_cast<const void *>(&address)), sizeof address);
+    stream.write(static_cast<const char *>(static_cast<const void *>(&command)), sizeof command);
+    stream.write(static_cast<const char *>(message), length);
+    stream.write((char) 0);
 }
