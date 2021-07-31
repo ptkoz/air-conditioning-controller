@@ -77,7 +77,10 @@ void UnitController::updateDisplayData() {
     Humidity humidity = humiditySensor.measureHumidity();
     Devices::AirConditionerStatus airConditionerStatus = airConditioner.getStatus();
 
-    display.setPrimaryTemperature(temperature,targetTemperature.isWarningTemperature(temperature));
+    display.setPrimaryTemperature(
+        temperature,
+        targetTemperature.isWarningTemperature(temperature) && isAcManagementEnabled()
+    );
     display.setAirConditioningSectionVisibility(isAcManagementEnabled());
     display.setTargetPrimaryTemperature(targetTemperature);
     display.setAirConditionerStatus(airConditionerStatus);
