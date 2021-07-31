@@ -23,26 +23,14 @@ namespace ACC::Devices {
             /** Reliable source of time */
             const Time::Source & timeSource;
 
-            bool isTurnedOn = false;
-
             /** Timestamp of most recent "turn on" operation on the device */
             Time::Timestamp lastTurnOnTimestamp = Time::Timestamp(0);
 
             /** Timestamp of most recent "turn off" operation on the device */
             Time::Timestamp lastTurnOffTimestamp = Time::Timestamp(0);
 
-            /** Timestamp of last received ping (negative value to consider unavailable until first ping arrives) */
-            Time::Timestamp lastPingTimestamp = Time::Timestamp(-maxIntervalWithoutPing);
-
-            /**
-             * Persist device state in EEPROM
-             */
-            void persistState() const;
-
-            /**
-             * Read device state from EEPROM
-             */
-            void restoreState();
+            /** Timestamp of last received ping */
+            Time::Timestamp lastPingTimestamp = Time::Timestamp(0);
 
             /**
              * Can we turn on? (prevents turning on when we are in the grace period after turn off
