@@ -32,9 +32,10 @@ namespace ACC::Displays {
             Devices::AirConditionerStatus airConditionerStatus = Devices::AirConditionerStatus::UNAVAILABLE;
 
             bool hasPrimaryTemperatureWarning = false;
+            bool hasAirConditioningSectionVisible = false;
             bool hasMenuDisplayed = false;
 
-            TSPoint touchPoint = TSPoint();
+            TSPoint touchPoint = TSPoint(-1, -1, -1);
             Time::Timestamp touchStartTimestamp = Time::Timestamp();
 
             void getAirConditioningStatusText(char * buffer, Devices::AirConditionerStatus status);
@@ -59,6 +60,9 @@ namespace ACC::Displays {
             void redrawSecondaryHumidity(const char * oldText, const char * newText);
 
             void redrawTargetPrimaryTemperatureConfiguration(const char * oldText, const char * newText);
+
+            void displayMenuScreen();
+            void displayInfoScreen();
         public:
             Display320x240(Adafruit_GFX & gfx, TouchScreen & touchScreen, const Time::Source & timeSource):
                 gfx(gfx),
@@ -70,16 +74,20 @@ namespace ACC::Displays {
             void setOutdoorTemperature(const Measures::Temperature & temperature) override;
             void setPrimaryTemperature(const Measures::Temperature & temperature, bool withWarning) override;
             void setPrimaryHumidity(const Measures::Humidity & humidity) override;
-            void setTargetPrimaryTemperature(const Measures::Temperature & temperature) override;
-            void setAirConditionerStatus(Devices::AirConditionerStatus status) override;
             void setSecondaryTemperature(const Measures::Temperature & temperature) override;
             void setSecondaryHumidity(const Measures::Humidity & humidity) override;
-            bool hasPendingInteraction() override;
 
-            bool isMenuModeEnabled() override { return hasMenuDisplayed; }
+            void setAirConditioningSectionVisibility(bool isVisible) override;
+            void setTargetPrimaryTemperature(const Measures::Temperature & temperature) override;
+            void setAirConditionerStatus(Devices::AirConditionerStatus status) override;
 
-            void enterMenuMode() override;
-            void enterInfoMode() override;
+            /** Process touch events and save outcome for further processing */
+            void processTouch();
+
+            bool hasAirConditioningManagementStatusChangeRequest() override;
+            bool getRequestedAirConditioningManagementStatus() override;
+            bool hasTargetPrimaryTemperatureChangeRequest() override;
+            double getRequestedPrimaryTargetTemperature() override;
     };
 }
 

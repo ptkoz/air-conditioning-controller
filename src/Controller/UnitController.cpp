@@ -8,6 +8,16 @@ using ACC::Measures::Humidity;
 using ACC::Devices::AirConditionerStatus;
 
 void UnitController::process() {
+    if (display.hasAirConditioningManagementStatusChangeRequest()) {
+        EEPROM.put(Persistence::Address::acManagementEnabled, display.getRequestedAirConditioningManagementStatus());
+        display.setAirConditioningSectionVisibility(isAcManagementEnabled());
+    }
+
+    if (display.hasTargetPrimaryTemperatureChangeRequest()) {
+        EEPROM.put(Persistence::Address::targetTemperature, display.getRequestedPrimaryTargetTemperature());
+        display.setTargetPrimaryTemperature(getTargetTemperature());
+    }
+
     if (lastTemperatureUpdate.getMinAgeSeconds() >= temperatureUpdateInterval) {
         if (isAcManagementEnabled()) {
             toggleAirConditioning();
@@ -21,12 +31,6 @@ void UnitController::process() {
             evaluateAirConditioningStatus();
         }
         lastEvaluationTimestamp = timeSource.currentTimestamp();
-    }
-
-    if (display.hasPendingInteraction()) {
-        display.isMenuModeEnabled()
-        ? display.enterInfoMode()
-        : display.enterMenuMode();
     }
 }
 
@@ -74,6 +78,7 @@ void UnitController::updateDisplayData() {
     Devices::AirConditionerStatus airConditionerStatus = airConditioner.getStatus();
 
     display.setPrimaryTemperature(temperature,targetTemperature.isWarningTemperature(temperature));
+    display.setAirConditioningSectionVisibility(isAcManagementEnabled());
     display.setTargetPrimaryTemperature(targetTemperature);
     display.setAirConditionerStatus(airConditionerStatus);
     display.setPrimaryHumidity(humidity);

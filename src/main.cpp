@@ -30,5 +30,6 @@ void setup() {
 void loop() {
     unitController.process();
     remoteCommandProcessor.process();
+    mainDisplay.processTouch();
 }
 
