@@ -24,7 +24,6 @@ void setup() {
     Serial.begin(9600);
     radio.initialize();
     sht35Sensor.initialize();
-    unitController.initialize();
     mainDisplay.initialize();
 }
 

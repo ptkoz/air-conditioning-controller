@@ -1,18 +1,15 @@
 #include "Controller/UnitController.h"
 #include <EEPROM.h>
+#include <Persistence/Addresses.h>
 
 using namespace ACC::Controller;
 using ACC::Measures::Temperature;
 using ACC::Measures::Humidity;
 using ACC::Devices::AirConditionerStatus;
 
-void UnitController::initialize() {
-    restoreState();
-}
-
 void UnitController::process() {
     if (lastTemperatureUpdate.getMinAgeSeconds() >= temperatureUpdateInterval) {
-        if (isAcManagementEnabled) {
+        if (isAcManagementEnabled()) {
             toggleAirConditioning();
         }
         updateDisplayData();
@@ -20,7 +17,7 @@ void UnitController::process() {
     }
 
     if (lastEvaluationTimestamp.getMinAgeSeconds() >= statusEvaluationInterval) {
-        if (isAcManagementEnabled) {
+        if (isAcManagementEnabled()) {
             evaluateAirConditioningStatus();
         }
         lastEvaluationTimestamp = timeSource.currentTimestamp();
@@ -34,6 +31,7 @@ void UnitController::process() {
 }
 
 void UnitController::toggleAirConditioning() {
+    TargetTemperature targetTemperature = getTargetTemperature();
     Temperature temperature = temperatureSensor.measureTemperature();
     AirConditionerStatus previousStatus = airConditioner.getStatus();
 
@@ -53,6 +51,7 @@ void UnitController::toggleAirConditioning() {
 }
 
 void UnitController::evaluateAirConditioningStatus() {
+    TargetTemperature targetTemperature = getTargetTemperature();
     Temperature temperature = temperatureSensor.measureTemperature();
 
     if (targetTemperature.isTemperatureAboveRange(temperature) && !(temperature < refTemperature)) {
@@ -69,6 +68,7 @@ void UnitController::evaluateAirConditioningStatus() {
 }
 
 void UnitController::updateDisplayData() {
+    TargetTemperature targetTemperature = getTargetTemperature();
     Temperature temperature = temperatureSensor.measureTemperature();
     Humidity humidity = humiditySensor.measureHumidity();
     Devices::AirConditionerStatus airConditionerStatus = airConditioner.getStatus();
@@ -79,12 +79,18 @@ void UnitController::updateDisplayData() {
     display.setPrimaryHumidity(humidity);
 }
 
-void UnitController::persistState() const {
-    EEPROM.put(0x02, targetTemperature.getTemperature());
+TargetTemperature UnitController::getTargetTemperature() {
+    double value;
+    EEPROM.get(Persistence::Address::targetTemperature, value);
+
+    return TargetTemperature(value);
 }
 
-void UnitController::restoreState() {
-    double restoredTargetTemperature;
-    EEPROM.get(0x02, restoredTargetTemperature);
-    targetTemperature = TargetTemperature(restoredTargetTemperature);
+bool UnitController::isAcManagementEnabled() {
+    bool value;
+    EEPROM.get(Persistence::Address::acManagementEnabled, value);
+
+    return value;
 }
+
+

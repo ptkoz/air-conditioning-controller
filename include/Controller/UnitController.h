@@ -20,9 +20,6 @@ namespace ACC::Controller {
             Displays::Display & display;
             const Time::Source & timeSource;
 
-            /** Target temperature we want to achieve with Air Conditioning */
-            TargetTemperature targetTemperature = TargetTemperature();
-
             /** Interval for updating temperature on screen and checking whether AC needs to be enabled / disabled */
             static constexpr unsigned short temperatureUpdateInterval = 10; // seconds
 
@@ -41,9 +38,6 @@ namespace ACC::Controller {
             /** Reference temperature for the ac evaluation */
             Measures::Temperature refTemperature = Measures::Temperature();
 
-            /** Whether AC management is enabled or disabled */
-            bool isAcManagementEnabled = true;
-
             /** Toggles air conditioning when required */
             void toggleAirConditioning();
 
@@ -56,11 +50,11 @@ namespace ACC::Controller {
             /** Updates data visible on the screen */
             void updateDisplayData();
 
-            /** Saves controller state to persistent memory */
-            void persistState() const;
+            /** Gets current target temperature setting */
+            TargetTemperature getTargetTemperature();
 
-            /** Restores controller state from persistent memory */
-            void restoreState();
+            /** Get current setting flag for whether AC management is enabled */
+            bool isAcManagementEnabled();
         public:
             explicit UnitController(
                 Sensors::TemperatureSensor & temperatureSensor,
@@ -75,7 +69,6 @@ namespace ACC::Controller {
                 display(display),
                 timeSource(timeSource) {}
 
-            void initialize();
             void process();
     };
 }

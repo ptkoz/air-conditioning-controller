@@ -3,42 +3,30 @@
 
 #include <math.h>
 #include "DoubleValue.h"
+#include "DecimalString.h"
 
 namespace ACC::Measures {
     /**
      * Representation of the humidity
      */
     class Humidity : public DoubleValue {
-        protected:
-            static constexpr unsigned char formattedBufferSize = 7;
-            char formattedValue[formattedBufferSize];
         public:
             /** Construct from humidity value */
-            explicit Humidity(double humidity);
-
-            /** Copy constructor */
-            Humidity(const Humidity & copyFrom);
+            explicit Humidity(double humidity):
+                DoubleValue(humidity) {}
 
             /** By default construct humidity with no actual value */
             explicit Humidity():
                 Humidity(NAN) {}
 
-            /** Return humidity value */
-            double getHumidity() const {
-                return rawValue;
+            /** Assignment operator */
+            Humidity & operator=(const Humidity & copyFrom) {
+                rawValue = copyFrom.rawValue;
+                return *this;
             }
 
             /** Returns formatted humidity string */
-            const char * getFormattedHumidity() const {
-                return formattedValue;
-            }
-
-            /** Assignment operator */
-            Humidity & operator=(const Humidity & copyFrom);
-
-            /** Overloaded strict comparison that compares by string representation */
-            bool operator==(const Humidity & other) const;
-            bool operator!=(const Humidity & other) const;
+            DecimalString getFormattedHumidity() const;
     };
 }
 

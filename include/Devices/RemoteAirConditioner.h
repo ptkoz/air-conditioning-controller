@@ -56,11 +56,6 @@ namespace ACC::Devices {
                 timeSource(timeSource) {}
 
             /**
-             * Initializes the remote Air Conditioner
-             */
-            void initialize();
-
-            /**
              * Gets the AC current status
              */
             AirConditionerStatus getStatus() const override;

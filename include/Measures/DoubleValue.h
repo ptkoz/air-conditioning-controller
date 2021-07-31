@@ -13,13 +13,13 @@ namespace ACC::Measures {
             explicit DoubleValue(double value):
                 rawValue(value) {};
 
-            /** Comparison operators */
+            /** Comparison operators checks equality to first decimal point */
             virtual bool operator==(const DoubleValue & other) const {
-                return rawValue == other.rawValue;
+                return round(rawValue * 10) == round(other.rawValue * 10);
             }
 
             virtual bool operator!=(const DoubleValue & other) const {
-                return rawValue != other.rawValue;
+                return round(rawValue * 10) != round(other.rawValue * 10);
             }
 
             /** Greater than / smaller than operators check 0.1 significance */
