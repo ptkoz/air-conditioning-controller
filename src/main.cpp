@@ -8,7 +8,7 @@
 #include "Sensors/SHT35.h"
 
 ACC::Time::Source timeSource;
-ACC::Displays::AdafruitGFX::ILI9341 mainDisplay(timeSource, 10, 8, 11, 13, 24, 12, 9, 6, A3, A2, 7, 200);
+ACC::Displays::AdafruitGFX::ILI9341 mainDisplay(timeSource, 10, 8, 11, 13, 24, 12, 9, 6, A3, A2, 7, 300);
 
 ACC::Controller::RemoteCommand::Radio radio(Serial, 2);
 ACC::Controller::RemoteCommand::Executor remoteCommandExecutor(radio);

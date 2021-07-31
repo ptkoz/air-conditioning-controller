@@ -13,10 +13,13 @@ namespace ACC::Displays {
     class Display320x240 : public Display {
         protected:
             static constexpr unsigned int backgroundColor = 0x0000;
-            static constexpr unsigned int menuBackgroundColor = 0x0824;
+            static constexpr unsigned int menuBackgroundColor = 0x6041;
             static constexpr unsigned int standardFontColor = 0xffff;
             static constexpr unsigned int warningFontColor = 0xFCB3;
             static constexpr unsigned int separatorColor = 0x79A1;
+
+            static constexpr unsigned char trustworthyTouchDuration = 10; // milliseconds
+            static constexpr unsigned char menuDisableInactivityTimeout = 15; // seconds
 
             Adafruit_GFX & gfx;
             TouchScreen & touchScreen;
@@ -35,8 +38,14 @@ namespace ACC::Displays {
             bool hasAirConditioningSectionVisible = false;
             bool hasMenuDisplayed = false;
 
+            /** The point on the screen that is being touched */
             TSPoint touchPoint = TSPoint(-1, -1, -1);
+
+            /** The timestamp when the last potential touch event started */
             Time::Timestamp touchStartTimestamp = Time::Timestamp();
+
+            /** The timestamp when the last trustworthy touch event occurred */
+            Time::Timestamp lastTouchTimestamp = Time::Timestamp();
 
             void getAirConditioningStatusText(char * buffer, Devices::AirConditionerStatus status);
 
@@ -59,7 +68,16 @@ namespace ACC::Displays {
             void redrawSecondaryTemperature(const char * oldText, const char * newText);
             void redrawSecondaryHumidity(const char * oldText, const char * newText);
 
+            void redrawMenuControls();
             void redrawTargetPrimaryTemperatureConfiguration(const char * oldText, const char * newText);
+
+            bool inline isBackButtonTouched() const;
+            bool inline isAcYesButtonTouched() const;
+            bool inline isAcNoButtonTouched() const;
+            bool inline isAddTemp1ButtonTouched() const;
+            bool inline isAddTemp2ButtonTouched() const;
+            bool inline isSubTemp1ButtonTouched() const;
+            bool inline isSubTemp2ButtonTouched() const;
 
             void displayMenuScreen();
             void displayInfoScreen();
