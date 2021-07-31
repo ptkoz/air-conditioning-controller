@@ -14,11 +14,12 @@ Temperature::Temperature(double temperature):
         DoubleValue(temperature),
         formattedValue{} {
 
+    // the * looks pretty close to a degree sign and the fonts are updated to actually display degree sign on the screen
     if (isnan(rawValue)) {
-        strncpy(formattedValue, "  -.-C", formattedBufferSize);
+        strncpy(formattedValue, "  -.-*C", formattedBufferSize);
     } else {
         dtostrf(temperature, 5, 1, formattedValue);
-        strcat(formattedValue, "C");
+        strcat(formattedValue, "*C");
     }
 }
 

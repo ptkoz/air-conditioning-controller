@@ -4,6 +4,7 @@
 using namespace ACC::Controller;
 using ACC::Measures::Temperature;
 using ACC::Measures::Humidity;
+using ACC::Devices::AirConditionerStatus;
 
 void UnitController::initialize() {
     restoreState();
@@ -11,81 +12,79 @@ void UnitController::initialize() {
 
 void UnitController::process() {
     if (lastTemperatureUpdate.getMinAgeSeconds() >= temperatureUpdateInterval) {
-        Temperature temperature = temperatureSensor.measureTemperature();
-        Humidity humidity = humiditySensor.measureHumidity();
-
-
         if (isAcManagementEnabled) {
-            toggleAirConditioning(temperature);
+            toggleAirConditioning();
         }
-
-        updateDisplayData(temperature, humidity);
+        updateDisplayData();
         lastTemperatureUpdate = timeSource.currentTimestamp();
     }
 
-    if (lastEvaluationTimestamp.getMinAgeSeconds() >= statusEvaluationInterval && isAcManagementEnabled) {
-        Temperature temperature = temperatureSensor.measureTemperature();
-        evaluateAirConditioningStatus(temperature);
-
+    if (lastEvaluationTimestamp.getMinAgeSeconds() >= statusEvaluationInterval) {
+        if (isAcManagementEnabled) {
+            evaluateAirConditioningStatus();
+        }
         lastEvaluationTimestamp = timeSource.currentTimestamp();
-        refTemperature = temperature;
+    }
+
+    if (display.hasPendingInteraction()) {
+        display.isMenuModeEnabled()
+        ? display.enterInfoMode()
+        : display.enterMenuMode();
     }
 }
 
-void UnitController::toggleAirConditioning(const Temperature & temperature) {
-    bool wasAirConditioningEnabled = isAcEnabled;
+void UnitController::toggleAirConditioning() {
+    Temperature temperature = temperatureSensor.measureTemperature();
+    AirConditionerStatus previousStatus = airConditioner.getStatus();
 
-    if (!isAcEnabled && targetTemperature.isTemperatureAboveRange(temperature) && airConditioner.isAvailable()) {
-        isAcEnabled = airConditioner.turnOn();
-    }
-
-    if (isAcEnabled && targetTemperature.isTemperatureBellowRange(temperature) && airConditioner.isAvailable()) {
-        isAcEnabled = !airConditioner.turnOff();
-    }
-
-    if (isAcEnabled && !airConditioner.isAvailable()) {
-        isAcEnabled = false;
-    }
-
-    if (wasAirConditioningEnabled != isAcEnabled) {
-        // we successfully attempted turning AC On or Off, save state and reference temperature for further evaluation
-        persistState();
-        lastEvaluationTimestamp = timeSource.currentTimestamp();
-        refTemperature = temperature;
-    }
-}
-
-void UnitController::updateDisplayData(const Temperature & temperature, const Humidity & humidity) {
-    display.setPrimaryTemperature(
-        temperature,
-        targetTemperature.isWarningTemperature(temperature)
-    );
-    display.setTargetPrimaryTemperature(targetTemperature);
-    display.setCoolingIndicator(isAcEnabled);
-    display.setPrimaryHumidity(humidity);
-}
-
-void UnitController::evaluateAirConditioningStatus(const Temperature & temperature) {
-    if (isAcEnabled && targetTemperature.isTemperatureAboveRange(temperature) && !(temperature < refTemperature)) {
-        // AC should be on, but the temperature has not fallen significantly in last interval
+    if (targetTemperature.isTemperatureAboveRange(temperature)) {
         airConditioner.turnOn();
     }
 
-    if (!isAcEnabled && targetTemperature.isTemperatureBellowRange(temperature) && temperature < refTemperature) {
-        // AC should be off, but the temperature is still falling
+    if (targetTemperature.isTemperatureBellowRange(temperature)) {
         airConditioner.turnOff();
+    }
+
+    if (previousStatus != airConditioner.getStatus()) {
+        // we successfully attempted turning AC On or Off, re-evaluate AC status comparing against current measures
+        lastEvaluationTimestamp = timeSource.currentTimestamp();
+        refTemperature = temperature;
     }
 }
 
+void UnitController::evaluateAirConditioningStatus() {
+    Temperature temperature = temperatureSensor.measureTemperature();
+
+    if (targetTemperature.isTemperatureAboveRange(temperature) && !(temperature < refTemperature)) {
+        // AC should be on, but the temperature has not fallen significantly in last interval
+        airConditioner.turnOn(true);
+    }
+
+    if (targetTemperature.isTemperatureBellowRange(temperature) && temperature < refTemperature) {
+        // AC should be off, but the temperature is still significantly falling
+        airConditioner.turnOff(true);
+    }
+
+    refTemperature = temperature;
+}
+
+void UnitController::updateDisplayData() {
+    Temperature temperature = temperatureSensor.measureTemperature();
+    Humidity humidity = humiditySensor.measureHumidity();
+    Devices::AirConditionerStatus airConditionerStatus = airConditioner.getStatus();
+
+    display.setPrimaryTemperature(temperature,targetTemperature.isWarningTemperature(temperature));
+    display.setTargetPrimaryTemperature(targetTemperature);
+    display.setAirConditionerStatus(airConditionerStatus);
+    display.setPrimaryHumidity(humidity);
+}
+
 void UnitController::persistState() const {
-    EEPROM.put(0x01, isAcEnabled);
     EEPROM.put(0x02, targetTemperature.getTemperature());
 }
 
 void UnitController::restoreState() {
     double restoredTargetTemperature;
-    EEPROM.get(0x01, isAcEnabled);
     EEPROM.get(0x02, restoredTargetTemperature);
-
     targetTemperature = TargetTemperature(restoredTargetTemperature);
 }

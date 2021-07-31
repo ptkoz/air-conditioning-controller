@@ -29,12 +29,6 @@ namespace ACC::Controller {
             /** Initialize with negative value so we get first temperature update without latency */
             Time::Timestamp lastTemperatureUpdate = Time::Timestamp(-temperatureUpdateInterval);
 
-            /** Whether this controller should control the temperature or just update screen information */
-            bool isAcManagementEnabled = true;
-
-            /** Whether we think AC unit is currently enabled or not */
-            bool isAcEnabled = false;
-
             /**
              * Interval for validating that temperature falls down when ac is enabled and does not fall down whenAC
              * is disabled.
@@ -47,17 +41,20 @@ namespace ACC::Controller {
             /** Reference temperature for the ac evaluation */
             Measures::Temperature refTemperature = Measures::Temperature();
 
-            /** Toggles air conditioning when required */
-            void toggleAirConditioning(const Measures::Temperature & temperature);
+            /** Whether AC management is enabled or disabled */
+            bool isAcManagementEnabled = true;
 
-            /** Updates temperature visible on the screen */
-            void updateDisplayData(const Measures::Temperature & temperature, const Measures::Humidity & humidity);
+            /** Toggles air conditioning when required */
+            void toggleAirConditioning();
 
             /**
              * Evaluates AC status and repeats last command if required, e.g. when AC should be on but we
              * think it isn't because temperature is still raising.
              */
-            void evaluateAirConditioningStatus(const Measures::Temperature & temperature);
+            void evaluateAirConditioningStatus();
+
+            /** Updates data visible on the screen */
+            void updateDisplayData();
 
             /** Saves controller state to persistent memory */
             void persistState() const;
@@ -66,11 +63,11 @@ namespace ACC::Controller {
             void restoreState();
         public:
             explicit UnitController(
-                    Sensors::TemperatureSensor & temperatureSensor,
-                    Sensors::HumiditySensor & humiditySensor,
-                    Devices::AirConditioner & airConditioner,
-                    Displays::Display & display,
-                    const Time::Source & timeSource
+                Sensors::TemperatureSensor & temperatureSensor,
+                Sensors::HumiditySensor & humiditySensor,
+                Devices::AirConditioner & airConditioner,
+                Displays::Display & display,
+                const Time::Source & timeSource
             ):
                 temperatureSensor(temperatureSensor),
                 humiditySensor(humiditySensor),

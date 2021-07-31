@@ -19,7 +19,6 @@ void SHT35::initialize() {
 
 ACC::Measures::Temperature SHT35::measureTemperature() {
     requestMeasurementFromSensor();
-    temperatureMeasures[temperatureMeasureIndex++ % numberOfMeasures] = sensor.getTemperature();
 
     double sum = 0;
     for (double measure : temperatureMeasures) {
@@ -42,7 +41,11 @@ ACC::Measures::Humidity SHT35::measureHumidity() {
 
 void SHT35::requestMeasurementFromSensor() {
     if (lastSensorRead.getMinAgeSeconds() >= sensorReadInterval) {
-        sensor.read(true);
+        sensor.read(false);
+
+        temperatureMeasures[temperatureMeasureIndex++ % numberOfMeasures] = sensor.getTemperature();
+        humidityMeasures[humidityMeasureIndex++ % numberOfMeasures] = sensor.getHumidity();
+
         lastSensorRead = timeSource.currentTimestamp();
     }
 }

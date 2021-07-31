@@ -23,6 +23,8 @@ namespace ACC::Devices {
             /** Reliable source of time */
             const Time::Source & timeSource;
 
+            bool isTurnedOn = false;
+
             /** Timestamp of most recent "turn on" operation on the device */
             Time::Timestamp lastTurnOnTimestamp = Time::Timestamp(0);
 
@@ -32,18 +34,32 @@ namespace ACC::Devices {
             /** Timestamp of last received ping (negative value to consider unavailable until first ping arrives) */
             Time::Timestamp lastPingTimestamp = Time::Timestamp(-maxIntervalWithoutPing);
 
-            /** Checks whether the device can be turned on or are we in the grace period after recent turn off */
-            bool canTurnOn() {
-                return lastTurnOffTimestamp.getMinAgeSeconds() > minGracePeriodSeconds;
+            /**
+             * Persist device state in EEPROM
+             */
+            void persistState() const;
+
+            /**
+             * Read device state from EEPROM
+             */
+            void restoreState();
+
+            /**
+             * Can we turn on? (prevents turning on when we are in the grace period after turn off
+             */
+            bool canTurnOn() const {
+                return getStatus() != AirConditionerStatus::UNAVAILABLE &&
+                lastTurnOffTimestamp.getMinAgeSeconds() >= minGracePeriodSeconds;
             }
 
-            /** Checks whether the device can be turned off or are we in the grace period after recent turn on */
-            bool canTurnOff() {
-                return lastTurnOnTimestamp.getMinAgeSeconds() > minGracePeriodSeconds;
+            /**
+             * Can we turn off? (prevents turning off when we are in the grace period after turn on
+             */
+            bool canTurnOff() const {
+                return getStatus() != AirConditionerStatus::UNAVAILABLE &&
+                lastTurnOnTimestamp.getMinAgeSeconds() >= minGracePeriodSeconds;
             }
-
         public:
-            /** Constructor */
             explicit RemoteAirConditioner(
                 Controller::RemoteCommand::Executor & remoteExecutor,
                 const Time::Source & timeSource
@@ -52,32 +68,31 @@ namespace ACC::Devices {
                 timeSource(timeSource) {}
 
             /**
-             * Returns true if we recently received a ping from remote device.
+             * Initializes the remote Air Conditioner
              */
-            bool isAvailable() override {
-                return lastPingTimestamp.getMinAgeSeconds() <= maxIntervalWithoutPing;
-            }
+            void initialize();
+
+            /**
+             * Gets the AC current status
+             */
+            AirConditionerStatus getStatus() const override;
+
+            /**
+             * Turns on the device on if possible. Device cannot be turned on in grace period after turn off.
+             * When force repeat is specified, the signal will be send even when we expect it to be already turned on.
+             */
+            void turnOn(bool forceRepeat = false) override;
+
+            /**
+             * Turns off the device on if possible. Device cannot be turned off in grace period after turn on.
+             * When force repeat is specified, the signal will be send even when we expect it to be already turned off.
+             */
+            void turnOff(bool forceRepeat = false) override;
 
             /**
              * Acknowledges that a ping arrived from the device
              */
-            void acknowledgePing() {
-                lastPingTimestamp = timeSource.currentTimestamp();
-            }
-
-            /**
-             * Turns on the device on if possible. Device cannot be turned on in grace period after turn off.
-             *
-             * @return true if signal to turn on has been sent, false otherwise
-             */
-            bool turnOn() override;
-
-            /**
-             * Turns off the device on if possible. Device cannot be turned off in grace period after turn on.
-             *
-             * @return true if signal to turn off has been sent, false otherwise
-             */
-            bool turnOff() override;
+            void acknowledgePing();
     };
 }
 

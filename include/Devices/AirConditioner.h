@@ -2,17 +2,23 @@
 #define AIR_CONDITIONING_CONTROLLER_AIRCONDITIONER_H
 
 namespace ACC::Devices {
+    enum AirConditionerStatus {
+        UNAVAILABLE, // The device in unavailable (offline)
+        TURNED_OFF, // Device is online, air conditioning is turned off
+        TURNED_ON, // Device is online, air conditioning is turned on
+    };
+
     /**
      * Interface for AirConditioners device
      */
     class AirConditioner {
         public:
-            /** Whether AC Unit is available (online) */
-            virtual bool isAvailable() = 0;
-            /** Tries to turn on the AC */
-            virtual bool turnOn() = 0;
-            /** Tries to turn off the AC */
-            virtual bool turnOff() = 0;
+            /** Returns current air conditioning status */
+            virtual AirConditionerStatus getStatus() const = 0;
+            /** Turns on the device (if possible) */
+            virtual void turnOn(bool forceRepeat = false) = 0;
+            /** Turns off the device (if possible) */
+            virtual void turnOff(bool forceRepeat = false) = 0;
     };
 }
 
