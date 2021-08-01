@@ -2,6 +2,9 @@
 #define AIR_CONDITIONING_CONTROLLER_AIRCONDITIONER_H
 
 namespace ACC::Devices {
+    /**
+     * Available Air Conditioner statuses
+     */
     enum AirConditionerStatus {
         UNAVAILABLE, // The device in unavailable (offline)
         TURNED_OFF, // Device is online, air conditioning is turned off

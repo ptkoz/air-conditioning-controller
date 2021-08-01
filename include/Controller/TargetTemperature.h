@@ -4,6 +4,9 @@
 #include "Measures/Temperature.h"
 
 namespace ACC::Controller {
+    /**
+     * Represents configured target temperature.
+     */
     class TargetTemperature : public Measures::Temperature {
         private:
             static constexpr double acBoundary = 0.3f;
