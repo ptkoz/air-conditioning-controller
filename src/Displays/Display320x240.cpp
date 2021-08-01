@@ -194,7 +194,7 @@ void Display320x240::setPrimaryTemperature(const Measures::Temperature & tempera
             redrawPrimaryTemperature(
                 primaryTemperature.getFormattedTemperature(),
                 temperature.getFormattedTemperature(),
-                hasPrimaryTemperatureWarning ? warningFontColor : standardFontColor
+                withWarning ? warningFontColor : standardFontColor
             );
         }
 
