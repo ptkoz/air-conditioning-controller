@@ -88,8 +88,12 @@ void UnitController::updateDisplayData() {
 }
 
 TargetTemperature UnitController::getTargetTemperature() {
-    double value;
+    float value;
     EEPROM.get(Persistence::Address::targetTemperature, value);
+
+    if (isnan(value) || value > 30.0f || value < 17.0f) {
+        value = 23.5f;
+    }
 
     return TargetTemperature(value);
 }

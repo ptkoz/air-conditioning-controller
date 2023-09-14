@@ -2,18 +2,18 @@
 #define AIR_CONDITIONING_CONTROLLER_HUMIDITY_H
 
 #include <math.h>
-#include "DoubleValue.h"
+#include "FloatValue.h"
 #include "DecimalString.h"
 
 namespace ACC::Measures {
     /**
      * Representation of the humidity
      */
-    class Humidity : public DoubleValue {
+    class Humidity : public FloatValue {
         public:
             /** Construct from humidity value */
-            explicit Humidity(double humidity):
-                DoubleValue(humidity) {}
+            explicit Humidity(float humidity):
+                    FloatValue(humidity) {}
 
             /** By default construct humidity with no actual value */
             explicit Humidity():

@@ -2,18 +2,18 @@
 #define AIR_CONDITIONING_CONTROLLER_TEMPERATURE_H
 
 #include <math.h>
-#include "DoubleValue.h"
+#include "FloatValue.h"
 #include "DecimalString.h"
 
 namespace ACC::Measures {
     /**
      * Representation of the temperature
      */
-    class Temperature : public DoubleValue {
+    class Temperature : public FloatValue {
         public:
             /** Construct from temperature value */
-            explicit Temperature(double temperature):
-                DoubleValue(temperature) {}
+            explicit Temperature(float temperature):
+                    FloatValue(temperature) {}
 
             /** By default construct temperature with no actual value */
             explicit Temperature():
@@ -26,7 +26,7 @@ namespace ACC::Measures {
             }
 
             /** Return temperature value */
-            double getTemperature() const {
+            float getTemperature() const {
                 return rawValue;
             }
 

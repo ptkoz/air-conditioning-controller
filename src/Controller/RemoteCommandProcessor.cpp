@@ -35,7 +35,7 @@ void Processor::process() {
 
         switch (command) {
             case setSecondaryTemperatureAndHumidity: {
-                double values[2];
+                float values[2];
                 size_t length = 2 * sizeof values[0];
 
                 if (stream.readBytes(static_cast<char *>(static_cast<void *>(&values)), length) == length) {
@@ -50,7 +50,7 @@ void Processor::process() {
                 break;
             }
             case setOutdoorTemperature: {
-                double value;
+                float value;
                 size_t length = sizeof value;
 
                 if (stream.readBytes(static_cast<char *>(static_cast<void *>(&value)), length) == length) {

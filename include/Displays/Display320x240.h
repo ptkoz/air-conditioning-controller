@@ -105,7 +105,7 @@ namespace ACC::Displays {
             bool hasAirConditioningManagementStatusChangeRequest() override;
             bool getRequestedAirConditioningManagementStatus() override;
             bool hasTargetPrimaryTemperatureChangeRequest() override;
-            double getRequestedPrimaryTargetTemperature() override;
+            float getRequestedPrimaryTargetTemperature() override;
     };
 }
 

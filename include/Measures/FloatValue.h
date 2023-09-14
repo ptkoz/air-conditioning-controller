@@ -1,44 +1,44 @@
-#ifndef AIR_CONDITIONING_CONTROLLER_DOUBLEVALUE_H
-#define AIR_CONDITIONING_CONTROLLER_DOUBLEVALUE_H
+#ifndef AIR_CONDITIONING_CONTROLLER_FLOATVALUE_H
+#define AIR_CONDITIONING_CONTROLLER_FLOATVALUE_H
 
 namespace ACC::Measures {
     /**
      * Encapsulated double value
      */
-    class DoubleValue {
+    class FloatValue {
         protected:
-            double rawValue;
+            float rawValue;
 
         public:
-            explicit DoubleValue(double value):
+            explicit FloatValue(float value):
                 rawValue(value) {};
 
             /** Comparison operators checks equality to first decimal point */
-            virtual bool operator==(const DoubleValue & other) const {
+            virtual bool operator==(const FloatValue & other) const {
                 return round(rawValue * 10) == round(other.rawValue * 10);
             }
 
-            virtual bool operator!=(const DoubleValue & other) const {
+            virtual bool operator!=(const FloatValue & other) const {
                 return round(rawValue * 10) != round(other.rawValue * 10);
             }
 
             /** Greater than / smaller than operators check 0.1 significance */
-            bool operator>(const DoubleValue & other) const {
+            bool operator>(const FloatValue & other) const {
                 return rawValue > other.rawValue + 0.1f;
             }
 
-            bool operator>=(const DoubleValue & other) const {
+            bool operator>=(const FloatValue & other) const {
                 return rawValue >= other.rawValue;
             }
 
-            bool operator<(const DoubleValue & other) const {
+            bool operator<(const FloatValue & other) const {
                 return rawValue < other.rawValue - 0.1f;
             }
 
-            bool operator<=(const DoubleValue & other) const {
+            bool operator<=(const FloatValue & other) const {
                 return rawValue <= other.rawValue;
             }
     };
 }
 
-#endif //AIR_CONDITIONING_CONTROLLER_DOUBLEVALUE_H
+#endif //AIR_CONDITIONING_CONTROLLER_FLOATVALUE_H

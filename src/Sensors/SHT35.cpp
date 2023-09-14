@@ -6,12 +6,12 @@ void SHT35::initialize() {
     sensor.begin(sensorAddress);
     sensor.heatOff();
 
-    for (double & measure : temperatureMeasures) {
+    for (float & measure : temperatureMeasures) {
         sensor.read(true);
         measure = sensor.getTemperature();
     }
 
-    for (double & measure : humidityMeasures) {
+    for (float & measure : humidityMeasures) {
         sensor.read(true);
         measure = sensor.getHumidity();
     }
@@ -20,8 +20,8 @@ void SHT35::initialize() {
 ACC::Measures::Temperature SHT35::measureTemperature() {
     requestMeasurementFromSensor();
 
-    double sum = 0;
-    for (double measure : temperatureMeasures) {
+    float sum = 0;
+    for (float measure : temperatureMeasures) {
         sum += measure;
     }
 
@@ -31,8 +31,8 @@ ACC::Measures::Temperature SHT35::measureTemperature() {
 ACC::Measures::Humidity SHT35::measureHumidity() {
     requestMeasurementFromSensor();
 
-    double sum = 0;
-    for (double measure : humidityMeasures) {
+    float sum = 0;
+    for (float measure : humidityMeasures) {
         sum += measure;
     }
 

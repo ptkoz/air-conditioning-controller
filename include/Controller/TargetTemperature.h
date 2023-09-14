@@ -9,11 +9,11 @@ namespace ACC::Controller {
      */
     class TargetTemperature : public Measures::Temperature {
         private:
-            static constexpr double acBoundary = 0.3f;
-            static constexpr double warningBoundary = 0.5f;
+            static constexpr float acBoundary = 0.3f;
+            static constexpr float warningBoundary = 0.5f;
         public:
             /** Construct from temperature value */
-            explicit TargetTemperature(double temperature):
+            explicit TargetTemperature(float temperature):
                 Measures::Temperature(temperature) {};
 
             explicit TargetTemperature():

@@ -403,8 +403,8 @@ bool Display320x240::hasTargetPrimaryTemperatureChangeRequest() {
            isSubTemp2ButtonTouched();
 }
 
-double Display320x240::getRequestedPrimaryTargetTemperature() {
-    double requestedTargetTemperature = targetPrimaryTemperature.getTemperature();
+float Display320x240::getRequestedPrimaryTargetTemperature() {
+    float requestedTargetTemperature = targetPrimaryTemperature.getTemperature();
 
     if (isAddTemp1ButtonTouched()) {
         requestedTargetTemperature = targetPrimaryTemperature.getTemperature() + 0.1f;

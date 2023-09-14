@@ -6,7 +6,7 @@
 using ACC::Measures::DecimalString;
 
 DecimalString::DecimalString(
-    double value,
+    float value,
     unsigned char bufferLength,
     char decimalWidth,
     unsigned char decimalPrecision

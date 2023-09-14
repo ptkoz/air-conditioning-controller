@@ -3,7 +3,7 @@
 
 namespace ACC::Measures {
     /**
-     * Holds a double value as decimal string.
+     * Holds a float value as decimal string.
      */
     class DecimalString {
         protected:
@@ -12,7 +12,7 @@ namespace ACC::Measures {
         public:
             /** Allocate the memory */
             explicit DecimalString(
-                double value,
+                float value,
                 unsigned char bufferLength,
                 char decimalWidth,
                 unsigned char decimalPrecision

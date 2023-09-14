@@ -23,10 +23,10 @@ namespace ACC::Sensors {
             Time::Timestamp lastSensorRead = Time::Timestamp(-sensorReadInterval);
 
             unsigned char temperatureMeasureIndex = 0;
-            double temperatureMeasures[numberOfMeasures] = {};
+            float temperatureMeasures[numberOfMeasures] = {};
 
             unsigned char humidityMeasureIndex = 0;
-            double humidityMeasures[numberOfMeasures] = {};
+            float humidityMeasures[numberOfMeasures] = {};
 
             void requestMeasurementFromSensor();
         public:

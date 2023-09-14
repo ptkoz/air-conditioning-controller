@@ -45,7 +45,7 @@ namespace ACC::Displays {
             virtual bool hasTargetPrimaryTemperatureChangeRequest() = 0;
 
             /** Returns requested target primary temperature */
-            virtual double getRequestedPrimaryTargetTemperature() = 0;
+            virtual float getRequestedPrimaryTargetTemperature() = 0;
     };
 }
 
