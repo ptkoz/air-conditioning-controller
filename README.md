@@ -1,3 +1,8 @@
+# Deprecated
+
+This air controlling unit has been superseded by a RaspberryPi implementation using same
+peripherals.
+
 # Air Conditioning Controller
 
 A controlling unit for Air Conditioning management solution I've built around my mobile air conditioner.
