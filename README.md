@@ -1,6 +1,6 @@
 # Deprecated
 
-This air controlling unit has been superseded by a RaspberryPi implementation using same
+This air controlling unit has been superseded by a [RaspberryPi implementation](https://github.com/ptkoz/infodisplay-controller) using same
 peripherals.
 
 # Air Conditioning Controller
